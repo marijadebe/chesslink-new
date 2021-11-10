@@ -1,0 +1,33 @@
+<svg width="50" height="50" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet" version="1.0">
+ <g id="Layer_1">
+  <title>Layer 1</title>
+  <g id="svg_18">
+   <g id="svg_10">
+    <ellipse fill="#ffffff" stroke="#000" cx="25.68558" cy="25.20494" id="svg_1" rx="21.98697" ry="22.63843"/>
+    <g id="svg_9">
+     <g id="svg_5">
+      <rect fill="#ffffff" x="13.32624" y="12.08296" width="25.31646" height="26.32911" id="svg_2" rx="2" stroke="#000"/>
+      <line fill="none" x1="18.67552" y1="12.44405" x2="18.30651" y2="38.82782" id="svg_4" stroke="#000"/>
+     </g>
+     <line fill="none" x1="33.64704" y1="12.2861" x2="33.17535" y2="38.22949" id="svg_8" stroke="#000"/>
+    </g>
+   </g>
+   <line fill="none" stroke="#000" x1="13.4606" y1="18.05466" x2="18.53832" y2="18.05466" id="svg_11"/>
+   <line fill="none" stroke="#000" x1="13.6765" y1="25.46073" x2="18.44334" y2="25.35711" id="svg_12"/>
+   <line fill="none" stroke="#000" x1="13.46929" y1="31.97152" x2="18.23613" y2="31.97152" id="svg_13"/>
+   <line fill="none" stroke="#000" x1="33.74605" y1="17.1954" x2="38.56533" y2="17.095" id="svg_14"/>
+   <line fill="none" stroke="#000" x1="33.24404" y1="25.03027" x2="38.66573" y2="25.03027" id="svg_15"/>
+   <line fill="none" stroke="#000" x1="33.14364" y1="32.15524" x2="38.16372" y2="32.15524" id="svg_17"/>
+  </g>
+  <ellipse fill="#c9d6ea" stroke="#ffffff" cx="32.85438" cy="34.74907" id="svg_25" rx="8" ry="7.66345"/>
+  <path transform="rotate(90 26.4393 25.0999)" fill="#ffffff" stroke="#000000" d="m23.22421,28.20412l3.21508,-6.20842l3.21508,6.20842l-6.43016,0z" id="svg_27"/>
+  <g id="svg_43" stroke="null">
+   <rect fill="#ffffff" x="30.11404" y="38.21975" width="5.79602" height="1.57009" id="svg_28" rx="0.5" stroke-width="0.5" stroke="#000000"/>
+   <path fill="#ffffff" stroke-width="0.5" d="m32.50685,33.54488c-0.60862,-0.1939 -1.04487,-0.80999 -0.94573,-1.33563c0.06251,-0.33146 1.38142,-2.34363 1.49661,-2.28328c0.03759,0.0197 0.37214,0.48882 0.74342,1.0425c0.59477,0.88693 0.67507,1.05231 0.67507,1.39028c0,0.68506 -0.64667,1.24619 -1.42313,1.2349c-0.22658,-0.00329 -0.47239,-0.02524 -0.54624,-0.04877l0,0z" id="svg_42" stroke="#000000"/>
+   <ellipse fill="#ffffff" cx="33.02522" cy="29.93615" id="svg_31" rx="0.6771" ry="0.69402" stroke-width="0.5" stroke="#000000"/>
+   <path fill="#ffffff" stroke-width="0.5" d="m31.07788,38.20038l0.69591,-4.91835l2.3197,0l0.69591,4.91835l-3.71153,0l0.00001,0z" id="svg_29" stroke="#000000"/>
+   <line fill="none" x1="34.21941" y1="31.23498" x2="32.83795" y2="32.21887" id="svg_33" stroke-width="0.4" stroke="#000000"/>
+  </g>
+ </g>
+
+</svg>

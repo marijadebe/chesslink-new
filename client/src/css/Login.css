@@ -1,0 +1,11 @@
+.fabicon {
+    animation-duration: 1s;
+    animation-name: fabiconanimation;
+}
+@keyframes fabiconanimation {
+    from {opacity: 0; }
+    to {opacity: 1}
+  }
+.logoLogin {
+    float: right;
+}

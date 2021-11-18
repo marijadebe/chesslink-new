@@ -1,0 +1,10 @@
+.content {
+    overflow: auto;
+}
+.clout {
+    transition: 0.3s;
+    cursor: pointer;
+}
+.clout:hover {
+    opacity: 0.5;
+}

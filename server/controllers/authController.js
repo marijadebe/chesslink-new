@@ -1,9 +1,41 @@
 const crypto = require('crypto')
+const nodemailer = require('nodemailer')
+const validator = require('email-validator')
 const authModel = require('../models/authModel')
 
+var transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: process.env.MAIL_USER,
+      pass: process.env.MAIL_PASS
+    }
+});
 
-var postRegister = (req, res) => {
-
+var postRegister = async (req, res) => {
+    var username = req.body.username;
+    var email = req.body.email;
+    var password = crypto.createHash('sha256').update(req.body.password).digest('hex');
+    var securitynumber = Math.floor(100000 + Math.random() * 900000);
+    if(!validator.validate(email)) {
+        res.status(403).send("Email is invalid");
+    }
+    var response = await authModel.postRegister(username,email,password,securitynumber);
+    if(response == "success") {
+        req.session.login = true;
+        req.session.username = response.username;
+        req.session.validated = 0;
+        var mailOptions = {
+            from: 'chesslinkservice@gmail.com',
+            to: email,
+            subject: 'Account Verification',
+            html:'<h1>Welcome to Chesslink '+username+'!</h1><br/>Your verification code is '+securitynumber+'.<br/>Please remember this code in case you need to reset your password.'
+        };
+        transporter.sendMail(mailOptions);
+        console.log(req.session.username);
+        res.status(200).send("success")
+    }else {
+        res.status(403).send("Username or email already exists")
+    }
 }
 
 var postLogin = async (req, res) => {
@@ -15,17 +47,29 @@ var postLogin = async (req, res) => {
     }else {
         req.session.login = true;
         req.session.username = response.username;
+        req.session.validated = response.validated;
         res.status(200).send("success")
     }
 }
 
 var getLogin = (req, res) => {
-    console.log(req.session.login)
     if(req.session.login) {
-        res.status(200).send("success");
+        res.status(200).send((req.session.validated).toString())
     }else {
-        res.status(401).send("Forbidden");
+        res.status(401).send("Forbidden")
     }
 }
 
-module.exports = {postRegister,postLogin, getLogin}
+var getVerify = async (req,res) => {
+    var securitynumber = req.query.securitynumber;
+    var response = await authModel.getVerify(securitynumber, req.session.username);
+    if(response == "error[securitynumber]") {
+        res.status(401).send("Forbidden")
+    }else {
+        req.session.validated = 1;
+        res.status(200).send("success")
+    }
+}
+
+
+module.exports = {postRegister, postLogin, getLogin, getVerify}

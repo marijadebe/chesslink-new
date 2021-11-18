@@ -3,12 +3,13 @@ import {Navigate} from 'react-router-dom';
 import Loading from '../Loading.js';
 import axios from 'axios';
 axios.defaults.withCredentials = true;
+var authValid = 0;
 
 function ProtectedRoute(props) {
     var [isLogged, setIsLogged] = useState("Loading");
     useEffect(() => {
         axios.get('http://localhost:8000/auth/log').then((response)=> {
-            console.log(response);
+            authValid = parseInt(response.data);
             setIsLogged("True");
         }).catch((err) =>{
             setIsLogged("False");
@@ -18,7 +19,19 @@ function ProtectedRoute(props) {
         case "Loading":
             return <Loading />;
         case "True":
-            return props.component;
+            if(props.requiresValid) {
+                if(authValid === 1) {
+                    return props.component;
+                }else {
+                    return <Navigate to="/verify" />;
+                }
+            }else {
+                if(authValid === 1) {
+                    return <Navigate to="/" />;
+                }else {
+                    return props.component;
+                }
+            }
         case "False":
             return <Navigate to="/signin" />;
         default:

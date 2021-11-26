@@ -1,10 +1,15 @@
-import React, {useState} from "react";
+import React, {useState, useContext} from "react";
 import "../css/Register.css";
-import {Box, TextField, Button, Container, Typography, Link} from "@mui/material";
+import {Box, TextField, Button, Container, Typography, Link, SpeedDial, SpeedDialAction} from "@mui/material";
+import LightbulbIcon from '@mui/icons-material/Lightbulb';
+import InfoIcon from '@mui/icons-material/Info';
+import SpeedDialIcon from '@mui/material/SpeedDialIcon';
 import {Link as RouterLink, Navigate} from "react-router-dom";
 import AppRegistrationIcon from '@mui/icons-material/AppRegistration';
 import axios from 'axios';
 import ChesslinkLogo from '../ChesslinkLogo';
+import ModeContext from "../ModeContext.js";
+import InfoDialog from './InfoDialog';
 axios.default.withCredentials = true;
 var passwordsSame = true;
 
@@ -13,7 +18,9 @@ function Register() {
     var [password, setPassword] = useState("");
     var [repeatPassword, setRepeatPassword] = useState("");
     var [email, setEmail] = useState("");
+    var [openDialog, setOpenDialog] = useState(false);
     var [isRegged, setIsRegged] = useState(false);
+    var {colorMode, setColorMode} = useContext(ModeContext);
     var authRegister = () => {
         if(passwordsSame) {
         axios.post('http://localhost:8000/auth/reg', {username: username, password: password, email:email}, {
@@ -35,6 +42,13 @@ function Register() {
         }
         setRepeatPassword(value);
     }
+    var changeTheme = () => {
+        if(colorMode === 'dark') {
+            setColorMode('light');
+        }else {
+            setColorMode('dark');
+        }
+    }
     if(!isRegged) {
         return(
             <Container component="main" maxWidth="xs">
@@ -50,6 +64,15 @@ function Register() {
                     <Button margin="normal" variant="contained" sx={{ mt: 3, mb: 2 }} onClick={()=>authRegister()}>Sign Up</Button>
                     <Link component={RouterLink} to="/signin">Already have an account? Sign in</Link>
                 </Box>
+                <SpeedDial
+            ariaLabel="Display more"
+            sx={{ position: 'absolute', bottom: 16, right: 16 }}
+            icon={<SpeedDialIcon />}
+            >
+                <SpeedDialAction icon={<LightbulbIcon />} onClick={()=>changeTheme()} tooltipTitle="Change theme" />
+                <SpeedDialAction icon={<InfoIcon />} onClick={()=>setOpenDialog(true)} tooltipTitle="About" />
+            </SpeedDial>
+            <InfoDialog isOpened={openDialog} closeDialog={()=>setOpenDialog(false)} />
             </Container>
         );
     }else {

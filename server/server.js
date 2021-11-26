@@ -6,13 +6,13 @@ const helmet = require('helmet')
 const cookieParser = require('cookie-parser')
 const session = require('express-session')
 var MemoryStore = require('memorystore')(session)
-
 const app = express()
 const server = http.createServer(app)
 const io = require('socket.io')(server, {
     cors: {
-      origin: "http://localhost:3000",
-      methods: ['GET', 'POST']
+        origin: "http://localhost:3000",
+        methods: ["GET", "POST"],
+        credentials: true
     }
   })
 //Routes & controllers
@@ -26,7 +26,7 @@ app.use(express.json())
 app.use(cookieParser())
 app.use(cors({
     origin:["http://localhost:3000"],
-    methods: ["GET", "POST", 'PUT'],
+    methods: ["GET", "POST", 'PUT', 'DELETE'],
     credentials: true
 }))
 const sessionMiddleware = session({
@@ -35,21 +35,19 @@ const sessionMiddleware = session({
     resave: false,
     saveUninitialized: true,
     cookie: {
-        secure: false,
         maxAge: 864000000
     },
     store: new MemoryStore({
         checkPeriod: 86400000
     })
 })
-app.use(sessionMiddleware)
-io.use((socket, next) => {
-    sessionMiddleware(socket.request, {}, next)    
-})
-io.on("connection", socketController.onConnect)
 app.set('trust proxy', 1);
-
+app.use(sessionMiddleware)
+io.use((socket,next) => {
+    sessionMiddleware(socket.request, socket.request.res, next)
+})
+io.on("connection",socketController.onConnect)
 app.use('/api/users', users)
 app.use('/auth', auth)
 
-server.listen(8000 | process.env.PORT)
+server.listen(8000 || process.env.PORT)

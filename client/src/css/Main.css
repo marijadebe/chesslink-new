@@ -8,3 +8,13 @@
 .clout:hover {
     opacity: 0.5;
 }
+.mainview {
+    display: flex;
+    justify-content: flex-start;
+    flex-direction: column;
+    height: 100%;
+}
+.responsivechart {
+    overflow: hidden;
+    aspect-ratio:calc(3/2);
+}

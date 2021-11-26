@@ -9,12 +9,14 @@ import axios from 'axios';
 import ChesslinkLogo from '../ChesslinkLogo.js';
 import "../css/Login.css";
 import ModeContext from "../ModeContext.js";
+import InfoDialog from './InfoDialog';
 axios.defaults.withCredentials = true;
 
 function Login() {
     var [username, setUsername] = useState("");
     var [password, setPassword] = useState("");
     var [isLogged, setIsLogged] = useState(false);
+    var [openDialog, setOpenDialog] = useState(false);
     var {colorMode, setColorMode} = useContext(ModeContext);
 
     var authLogin = () => {
@@ -56,8 +58,9 @@ function Login() {
             icon={<SpeedDialIcon />}
             >
                 <SpeedDialAction icon={<LightbulbIcon />} onClick={()=>changeTheme()} tooltipTitle="Change theme" />
-                <SpeedDialAction icon={<InfoIcon />} tooltipTitle="About" />
+                <SpeedDialAction icon={<InfoIcon />} onClick={()=>setOpenDialog(true)} tooltipTitle="About" />
             </SpeedDial>
+            <InfoDialog isOpened={openDialog} closeDialog={()=>setOpenDialog(false)}/>
         </Container>
     );
     }else {

@@ -22,7 +22,7 @@ var postRegister = async (req, res) => {
     var response = await authModel.postRegister(username,email,password,securitynumber);
     if(response == "success") {
         req.session.login = true;
-        req.session.username = response.username;
+        req.session.username = username;
         req.session.validated = 0;
         var mailOptions = {
             from: 'chesslinkservice@gmail.com',
@@ -60,6 +60,11 @@ var getLogin = (req, res) => {
     }
 }
 
+var deleteLogin = (req, res) => {
+    console.log(req.session)
+    req.session.destroy();
+}
+
 var getVerify = async (req,res) => {
     var securitynumber = req.query.securitynumber;
     var response = await authModel.getVerify(securitynumber, req.session.username);
@@ -72,4 +77,4 @@ var getVerify = async (req,res) => {
 }
 
 
-module.exports = {postRegister, postLogin, getLogin, getVerify}
+module.exports = {postRegister, postLogin, getLogin, getVerify, deleteLogin}

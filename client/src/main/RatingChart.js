@@ -38,7 +38,7 @@ const returnChart = (type, data, themes) => {
     switch (type) {
         case "pie":
             return(
-                <ResponsiveContainer height={200}>
+                <ResponsiveContainer height={200} width="99%" className="responsivechart">
                     <PieChart width={400} height={400}>
                         <Pie
                             dataKey="players"
@@ -61,7 +61,7 @@ const returnChart = (type, data, themes) => {
             );
         case "area":
             return(
-                <ResponsiveContainer height={200}>
+                <ResponsiveContainer height={200} width="99%" className="responsivechart">
                 <AreaChart
                     width={500}
                     height={400}

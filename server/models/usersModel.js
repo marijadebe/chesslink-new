@@ -9,6 +9,8 @@ var getUsers = async () => {
         arr[i].username = result[0][i].username;
         arr[i].rating = result[0][i].rating;
         arr[i].validated = result[0][i].validated;
+        arr[i].online = result[0][i].validated;
+        arr[i].joindate = result[0][i].joindate;
     }
     return arr;
 }
@@ -19,6 +21,8 @@ var getUser = async (id,username) => {
     arr.username = result[0][0].username;
     arr.rating = result[0][0].rating;
     arr.validated = result[0][0].validated;
+    arr.online = result[0][0].validated;
+    arr.joindate = result[0][0].joindate;
     return arr;
 }
 

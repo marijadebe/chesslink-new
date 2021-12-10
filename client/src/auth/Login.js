@@ -1,4 +1,4 @@
-import React, {useState, useContext} from "react";
+import React, {useState, useContext, useEffect} from "react";
 import {Box, TextField, Button, Container, Typography, Link, SpeedDial, SpeedDialAction} from "@mui/material";
 import LockOpenIcon from '@mui/icons-material/LockOpen';
 import LightbulbIcon from '@mui/icons-material/Lightbulb';
@@ -18,7 +18,6 @@ function Login() {
     var [isLogged, setIsLogged] = useState(false);
     var [openDialog, setOpenDialog] = useState(false);
     var {colorMode, setColorMode} = useContext(ModeContext);
-
     var authLogin = () => {
         axios.post('http://localhost:8000/auth/log', {username:username, password:password}, {
             headers: {

@@ -20,7 +20,7 @@ var postRegister = async (req, res) => {
         res.status(403).send("Email is invalid");
     }
     var response = await authModel.postRegister(username,email,password,securitynumber);
-    if(response == "success") {
+    if(response == "success") {// nastav ID
         req.session.login = true;
         req.session.username = username;
         req.session.validated = 0;
@@ -46,6 +46,7 @@ var postLogin = async (req, res) => {
         res.status(404).send("User doesn't exist")
     }else {
         req.session.login = true;
+        req.session.identity = response.id;
         req.session.username = response.username;
         req.session.validated = response.validated;
         res.status(200).send("success")

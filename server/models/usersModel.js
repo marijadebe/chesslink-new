@@ -1,4 +1,5 @@
 const db = require('./database')
+const ip = require('ip')
 
 var getUsers = async () => {
     var result = await db.promise().query("SELECT * FROM users");
@@ -11,6 +12,7 @@ var getUsers = async () => {
         arr[i].validated = result[0][i].validated;
         arr[i].online = result[0][i].validated;
         arr[i].joindate = result[0][i].joindate;
+        arr[i].avatar = "http://"+ip.address()+":8000"+result[0][i].avatar;
     }
     return arr;
 }
@@ -23,6 +25,7 @@ var getUser = async (id,username) => {
     arr.validated = result[0][0].validated;
     arr.online = result[0][0].validated;
     arr.joindate = result[0][0].joindate;
+    arr.avatar = "http://"+ip.address()+":8000"+result[0][0].avatar;
     return arr;
 }
 

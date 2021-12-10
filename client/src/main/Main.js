@@ -1,21 +1,16 @@
 import React, {useContext, useState, useEffect} from "react";
 import {styled} from '@mui/material/styles';
-import {Grid,Paper, Box, Typography, SpeedDial, SpeedDialAction, SpeedDialIcon, Link, Button } from '@mui/material';
+import {Grid,Paper, Box, Typography, SpeedDial, SpeedDialAction, SpeedDialIcon, Link, Button, Autocomplete } from '@mui/material';
 import {Link as RouterLink, useNavigate} from 'react-router-dom';
-import ChesslinkLogo from '../ChesslinkLogo';
 import RatingChart from './RatingChart';
 import SelectChart from './SelectChart';
 import LobbyDisplay from './LobbyDisplay';
-import LogoutIcon from '@mui/icons-material/Logout';
-import LightbulbIcon from '@mui/icons-material/Lightbulb';
-import SettingsIcon from '@mui/icons-material/Settings';
-import { deleteLogin } from "../apiHelper";
-import ModeContext from "../ModeContext";
-import { io } from "socket.io-client";
+import {socket, reconnectSocket} from "../socketInstance";
 import axios from 'axios';
 import "../css/Main.css";
 import Navbar from './Navbar';
-import ConfigurationModal from "./ConfigurationModal";
+import MainDial from "./MainDial";
+import PlayersSearch from './PlayersSearch';
 axios.defaults.withCredentials = true;
 
 const Item = styled(Paper)(({ theme }) => ({
@@ -25,11 +20,10 @@ const Item = styled(Paper)(({ theme }) => ({
   }));
 
 function Main() {
-    var navigate = useNavigate();
-    const [socket, setSocket] = useState(null);
-    const [isConfOpen, setConfOpen] = useState(false);
-    const {colorMode,setColorMode} = useContext(ModeContext);
     const [selectedChart, setSelectedChart] = useState(<RatingChart type="area" />);
+    useEffect(()=> {
+        reconnectSocket();
+    },[])
     const sendChartType = (value) => {
         switch (value) {
             case "area":
@@ -42,22 +36,6 @@ function Main() {
                 break;
         }
     }
-    var changeColorMode = () => {
-        if(colorMode === 'dark') {
-            setColorMode('light');
-        }else {
-            setColorMode('dark');
-        }
-    }
-    var unLog = () => {
-        deleteLogin();
-        navigate("signin");
-    }
-    useEffect(()=> {
-        const newSocket = io(`http://localhost:8000`, {withCredentials:true});
-        setSocket(newSocket);
-        return () => newSocket.close();
-    },[setSocket])
     return(
         <>
         <Box className="mainview" sx={{ flexGrow: 1 }}>
@@ -83,22 +61,14 @@ function Main() {
                 </Grid>
                 <Grid item xs={12} md={4}>
                     <Item>
-                        <Typography variant="h2">Friends</Typography>
+                        <Typography variant="h2">Players</Typography>
+                        <PlayersSearch />
                     </Item>
                 </Grid>
             </Grid>
         </Box>
         </Box>
-        <ConfigurationModal open={isConfOpen} handleClose={()=>setConfOpen(false)} />
-        <SpeedDial
-        ariaLabel="Display more"
-        sx={{ position: 'fixed', bottom: 16, right: 16 }}
-        icon={<SpeedDialIcon />}
-        >
-            <SpeedDialAction icon={<LogoutIcon />} onClick={()=>unLog()} tooltipTitle="Logout" />
-            <SpeedDialAction icon={<LightbulbIcon />} onClick={()=>changeColorMode()} tooltipTitle="Change theme" />
-            <SpeedDialAction icon={<SettingsIcon />} onClick={()=>setConfOpen(true)}tooltipTitle="Settings" />
-        </SpeedDial>
+        <MainDial/>
       </>
     )
 }

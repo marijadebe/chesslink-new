@@ -18,6 +18,7 @@ const io = require('socket.io')(server, {
 //Routes & controllers
 const users = require('./routes/users')
 const auth = require('./routes/auth')
+const friends = require('./routes/friends')
 const socketController = require('./controllers/socketController')
 
 //Middleware
@@ -26,7 +27,7 @@ app.use(express.json())
 app.use(cookieParser())
 app.use(cors({
     origin:["http://localhost:3000"],
-    methods: ["GET", "POST", 'PUT', 'DELETE'],
+    methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true
 }))
 const sessionMiddleware = session({
@@ -48,6 +49,8 @@ io.use((socket,next) => {
 })
 io.on("connection",socketController.onConnect)
 app.use('/api/users', users)
+app.use('/api/friends', friends)
 app.use('/auth', auth)
+app.use(express.static('public'))
 
 server.listen(8000 || process.env.PORT)

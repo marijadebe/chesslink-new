@@ -1,0 +1,22 @@
+.accountdisp {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 50%;
+}
+@media screen and (min-width: 600px){
+    .accountdisp {
+        width: fit-content;
+        padding: 5px;
+    }
+}
+.info {
+    width: 100%;
+    padding: 20px;
+}
+.goback {
+    position: absolute;
+    bottom: 0;
+    right: 75px;
+    margin: 15px;
+}

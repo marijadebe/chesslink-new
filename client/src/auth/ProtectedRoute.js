@@ -15,12 +15,18 @@ function ProtectedRoute(props) {
             setIsLogged("False");
         })
     }, [])
+    axios.get('http://localhost:8000/auth/log').then((response)=> {
+            authValid = parseInt(response.data);
+            setIsLogged("True");
+        }).catch((err) =>{
+            setIsLogged("False");
+        })
     switch(isLogged) {
         case "Loading":
             return <Loading />;
         case "True":
             if(props.requiresValid) {
-                if(authValid === 1) {
+                if(authValid == 1) {
                     return props.component;
                 }else {
                     return <Navigate to="/verify" />;

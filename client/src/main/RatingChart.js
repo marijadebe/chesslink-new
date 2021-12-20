@@ -29,7 +29,6 @@ const CustomTooltipPie = ({ active, payload, label }) => {
   };
 const returnChart = (type, data, themes) => {
     var COLORS = [];
-    console.log(themes);
     if(themes.palette.mode === 'dark') {
         COLORS = ['#3f51b5', '#593fb5', '#803fb5', '#803fb5'];
     }else {
@@ -85,7 +84,6 @@ const returnChart = (type, data, themes) => {
 }
 
 function RatingChart(props) {
-    console.log(props.type);
     const theme = useTheme();
     const [isLoading, setIsLoading] = useState(true);
     useEffect(()=> {

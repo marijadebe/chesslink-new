@@ -11,6 +11,7 @@ import Account from './account/Account.js';
 import Error from "./Error";
 import ModeContext from './ModeContext';
 import {ThemeProvider, createTheme, CssBaseline, responsiveFontSizes} from "@mui/material";
+import { SnackbarProvider } from 'notistack';
 
 function RoutesComponent() {
   return(
@@ -46,10 +47,12 @@ function App() {
     <div className="App">
     <ModeContext.Provider value={{colorMode:mode,setColorMode:changeMode}}>
       <ThemeProvider theme={darkTheme}>
+        <SnackbarProvider maxSnack={3}>
         <CssBaseline />
         <Router>
           <RoutesComponent/>  
         </Router>
+        </SnackbarProvider>
       </ThemeProvider>
     </ModeContext.Provider>
     </div>

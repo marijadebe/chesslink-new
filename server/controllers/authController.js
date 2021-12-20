@@ -62,7 +62,6 @@ var getLogin = (req, res) => {
 }
 
 var deleteLogin = (req, res) => {
-    console.log(req.session)
     req.session.destroy();
 }
 

@@ -21,6 +21,7 @@ function MainDial() {
         }
     }
     var unLog = () => {
+        console.log("necocoococ")
         deleteLogin();
         navigate("signin");
     }

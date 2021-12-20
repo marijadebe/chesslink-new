@@ -1,16 +1,16 @@
-import React, {useContext, useState, useEffect} from "react";
+import React, {useState, useEffect} from "react";
 import {styled} from '@mui/material/styles';
-import {Grid,Paper, Box, Typography, SpeedDial, SpeedDialAction, SpeedDialIcon, Link, Button, Autocomplete } from '@mui/material';
-import {Link as RouterLink, useNavigate} from 'react-router-dom';
+import {Grid,Paper, Box, Typography } from '@mui/material';
 import RatingChart from './RatingChart';
 import SelectChart from './SelectChart';
 import LobbyDisplay from './LobbyDisplay';
-import {socket, reconnectSocket} from "../socketInstance";
 import axios from 'axios';
+import {socket, reconnectSocket} from "../socketInstance";
 import "../css/Main.css";
 import Navbar from './Navbar';
 import MainDial from "./MainDial";
 import PlayersSearch from './PlayersSearch';
+import PushNotification from "../pushnotifications/PushNotification";
 axios.defaults.withCredentials = true;
 
 const Item = styled(Paper)(({ theme }) => ({
@@ -21,9 +21,6 @@ const Item = styled(Paper)(({ theme }) => ({
 
 function Main() {
     const [selectedChart, setSelectedChart] = useState(<RatingChart type="area" />);
-    useEffect(()=> {
-        reconnectSocket();
-    },[])
     const sendChartType = (value) => {
         switch (value) {
             case "area":
@@ -36,6 +33,9 @@ function Main() {
                 break;
         }
     }
+    useEffect(()=> {
+        reconnectSocket()
+    },[])
     return(
         <>
         <Box className="mainview" sx={{ flexGrow: 1 }}>
@@ -69,6 +69,7 @@ function Main() {
         </Box>
         </Box>
         <MainDial/>
+        <PushNotification />
       </>
     )
 }

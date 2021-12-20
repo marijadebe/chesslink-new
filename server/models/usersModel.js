@@ -29,4 +29,8 @@ var getUser = async (id,username) => {
     return arr;
 }
 
-module.exports = {getUsers,getUser};
+var putAvatar = (id, pathname) => {
+    db.promise().query('UPDATE users SET avatar=? WHERE id=?',[pathname,id])
+}
+
+module.exports = {getUsers,getUser, putAvatar};

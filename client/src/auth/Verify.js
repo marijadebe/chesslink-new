@@ -2,25 +2,20 @@ import { Container, TextField, Typography, Button } from "@mui/material";
 import { Box } from "@mui/system";
 import React, { useState } from "react";
 import axios from 'axios';
-import { Navigate, useNavigate } from "react-router";
+import { useNavigate } from "react-router";
 axios.default.withCredentials = true;
 
 function Verify() {
     var navigate = useNavigate();
     var [secCode, setSecCode] = useState("");
-    var [isVerified, setIsVerified] = useState(false);
 
     var getVerify = () => {
         axios.get('http://localhost:8000/auth/reg', {params:{securitynumber:secCode}}).then((response)=> {
             navigate('/');
-            setIsVerified(true);
         }).catch((err)=> {
             console.log(err);
         })
     }
-    if(isVerified) {
-        return(<Navigate to="/" />);
-    }else {
         return(
             <Container component="main" maxWidth="xs">
                 <Typography></Typography>
@@ -31,7 +26,6 @@ function Verify() {
                 </Box>
             </Container>
         );
-    }
 }
 
 export default Verify;

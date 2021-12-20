@@ -3,13 +3,13 @@ import { useNavigate, useParams } from "react-router";
 import Error from "../Error";
 import axios from 'axios';
 import Loading from "../Loading";
-import { io } from 'socket.io-client';
 import '../css/Account.css';
 import { Avatar, Paper, Typography, Button, Divider, Fab, Tooltip } from "@mui/material";
 import SubdirectoryArrowLeftIcon from '@mui/icons-material/SubdirectoryArrowLeft';
 import MainDial from "../main/MainDial";
-import socket from "../socketInstance";
+import {socket,reconnectSocket} from "../socketInstance";
 import { sendFriendReq } from '../socketHelper';
+import PushNotification from "../pushnotifications/PushNotification";
 axios.defaults.withCredentials = true;
 
 function Account(props) {
@@ -64,6 +64,7 @@ function Account(props) {
             </Tooltip>
             </div>
             <MainDial/>
+            <PushNotification />
             </>
         );
     }

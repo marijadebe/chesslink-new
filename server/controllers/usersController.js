@@ -8,7 +8,7 @@ var getUsers = async (req, res) => {
         res.status(404).send("Error 404");
     }
 }
-var getUser = async (req,res) => {
+var getUser = async (req, res) => {
     try {
         var result = await usersModel.getUser(req.params.id,req.params.username);
         res.json(result);
@@ -16,5 +16,12 @@ var getUser = async (req,res) => {
         res.status(404).send("Error 404");
     }
 }
+var postUpload = (req, res) => {
+    try {
+        usersModel.putAvatar(req.session.identity,"/img/"+req.file.filename)
+    }catch(err) {
+        res.status(404).send("Error 403");
+    }
+}
 
-module.exports = {getUsers, getUser}
+module.exports = {getUsers, getUser, postUpload}

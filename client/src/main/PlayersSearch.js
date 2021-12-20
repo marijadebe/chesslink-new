@@ -3,7 +3,6 @@ import React, { useEffect, useState } from "react";
 import axios from 'axios';
 import { useNavigate } from "react-router";
 import "../css/PlayersSearch.css";
-import PersonIcon from '@mui/icons-material/Person';
 axios.defaults.withCredentials = true;
 
 

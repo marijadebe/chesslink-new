@@ -54,7 +54,7 @@ function DrawerData() {
               </List>
             </AccordionDetails>
         </Accordion>
-        <Accordion TransitionProps={{ unmountOnExit: true }}>
+        <Accordion>
             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
             FRIENDS
             </AccordionSummary>

@@ -1,21 +1,23 @@
 import { Dialog, DialogContent, Button, DialogTitle, DialogActions } from '@mui/material';
 import LobbyDisplayModalComputerForm from './LobbyDisplayModalComputerForm';
-import React from 'react';
+import React, {useState} from 'react';
 import { useNavigate } from 'react-router';
 
 function LobbyDisplayModalComputer(props) {
+    const [color, setColor] = useState("white");
+    const [difficulty, setDifficulty] = useState("medium");
     var navigate = useNavigate();    
     var handleClose = () => {
         props.onClose();
     }
     var redirectToSinglePlayer = () => {
-        navigate('/singleplayer', {state: {neco:"neco"} });
+        navigate('/singleplayer', {state: {color:color,difficulty:difficulty} });
     }
     return(
         <Dialog onClose={handleClose} open={props.open}>
             <DialogTitle>Play against Computer</DialogTitle>
             <DialogContent>
-                <LobbyDisplayModalComputerForm />
+                <LobbyDisplayModalComputerForm color={color} difficulty={difficulty} liftColor={(color)=>setColor(color)} liftDifficulty={(difficulty=>setDifficulty(difficulty))} />
             </DialogContent>
             <DialogActions>
                 <Button onClick={handleClose}>Cancel</Button>

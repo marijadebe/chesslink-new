@@ -11,6 +11,10 @@ function PushNotification() {
         socket.on("getFriendReq", (data) => {
             enqueueSnackbar("You have received friend request from "+data.name+".",{variant:"info"})
         })
+    return () => {
+        socket.off("friendReqError");
+        socket.off("getFriendReq");
+    }
     },[enqueueSnackbar]);
     return(
         <>

@@ -18,3 +18,6 @@
     overflow: hidden;
     aspect-ratio:calc(3/2);
 }
+.lichessIframe {
+    width: 200px; height: 250px;
+}

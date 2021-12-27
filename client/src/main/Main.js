@@ -11,6 +11,7 @@ import Navbar from './Navbar';
 import MainDial from "./MainDial";
 import PlayersSearch from './PlayersSearch';
 import PushNotification from "../pushnotifications/PushNotification";
+import { useTheme } from '@mui/material/styles';
 axios.defaults.withCredentials = true;
 
 const Item = styled(Paper)(({ theme }) => ({
@@ -20,6 +21,7 @@ const Item = styled(Paper)(({ theme }) => ({
   }));
 
 function Main() {
+    const theme = useTheme();
     const [selectedChart, setSelectedChart] = useState(<RatingChart type="area" />);
     const sendChartType = (value) => {
         switch (value) {
@@ -51,6 +53,7 @@ function Main() {
                 <Grid item xs={12} md={6}>
                     <Item>
                         <Typography variant="h2">Feed</Typography>
+                        <iframe src={"https://lichess.org/training/frame?theme=brown&bg="+theme.palette.mode} className="lichessIframe" title="lichess_iframe" frameBorder="0"></iframe>
                     </Item>
                 </Grid>
                 <Grid item xs={12} md={8}>

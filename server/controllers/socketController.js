@@ -1,3 +1,5 @@
+const chessEngine = require('js-chess-engine')
+
 var socketModel = require('../models/socketModel')
 var friendsModel = require('../models/friendsModel')
 var clients = []
@@ -19,6 +21,12 @@ var onConnect = (socket) => {
         break;
       }  
     }
+  })
+  socket.on("stockfishMove", (fen) => {
+    let game = new chessEngine.Game(fen)
+    game.aiMove(2)
+    var data = game.exportFEN()
+    socket.emit("stockfishMoveCallback", data)
   })
   socket.on("getFriendsData", async ()=> {
     data = await friendsModel.getFriendsSpecific(socket.request.session.identity)

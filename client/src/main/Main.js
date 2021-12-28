@@ -11,6 +11,7 @@ import Navbar from './Navbar';
 import MainDial from "./MainDial";
 import PlayersSearch from './PlayersSearch';
 import PushNotification from "../pushnotifications/PushNotification";
+import Leaderboard from "./Leaderboard";
 import { useTheme } from '@mui/material/styles';
 axios.defaults.withCredentials = true;
 
@@ -42,7 +43,7 @@ function Main() {
         <>
         <Box className="mainview" sx={{ flexGrow: 1 }}>
         <Navbar />
-        <Box sx={{ flexGrow: 1 }} p={3}>
+        <Box sx={{ flexGrow: 1 }} p={3} sx={{marginTop: 7}}>
             <Grid container spacing={2}>
                 <Grid item xs={12} md={6}>
                     <Item>
@@ -66,6 +67,7 @@ function Main() {
                     <Item>
                         <Typography variant="h2">Players</Typography>
                         <PlayersSearch />
+                        <Leaderboard />
                     </Item>
                 </Grid>
             </Grid>

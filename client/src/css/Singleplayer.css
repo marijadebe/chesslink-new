@@ -1,0 +1,11 @@
+.mainView {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+}
+.boxStack {
+    margin: 10px;
+    text-align: center;
+}

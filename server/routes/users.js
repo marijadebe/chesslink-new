@@ -16,8 +16,10 @@ const storage = multer.diskStorage({
 })
 const imageUpload = multer({storage:storage})
 
-router.get('/', usersController.getUsers)
+
+router.get('/leaderboard', usersController.getLeaderboard)
 router.get('/:id/:username?',usersController.getUser)
 router.post('/upload',imageUpload.single('image') ,usersController.postUpload)
+router.get('/', usersController.getUsers)
 
 module.exports = router

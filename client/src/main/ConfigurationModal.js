@@ -13,7 +13,7 @@ function ConfigurationModal(props) {
     var imageUpload = () => {
         const formData = new FormData();
         formData.append('image',file);
-        axios.post("http://localhost:8000/api/users/upload",formData,{
+        axios.post("/api/users/upload",formData,{
             headers: { "Content-Type": "multipart/form-data" }
           }).then(()=> {
             console.log("povedlo se")

@@ -11,7 +11,7 @@ function PlayersSearch() {
     const [playerSearched, setPlayerSearched] = useState("");
     const [data, setData] = useState([]);
     useEffect(()=> {
-        axios.get('http://localhost:8000/api/users').then((result)=> {
+        axios.get('/api/users').then((result)=> {
             let trimmedResult = result.data.map(x => x.username);
             setData(trimmedResult);
         })
@@ -32,7 +32,6 @@ function PlayersSearch() {
         />
         <Button onClick={()=>navigateToProfile()}>Show</Button>
         </div><br/>
-        Leaderboard
       </>  
     );
 }

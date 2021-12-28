@@ -3,7 +3,9 @@ import { Chessboard } from 'react-chessboard';
 import { useLocation } from 'react-router-dom';
 import Chess from 'chess.js';
 import {socket} from "../socketInstance";
+import "../css/Singleplayer.css";
 import Error from '../Error';
+import {Box, Paper} from '@mui/material';
 
 function SinglePlayer() {
     const [game, setGame] = useState(new Chess());
@@ -50,9 +52,16 @@ function SinglePlayer() {
 
     if(state == null) return(<Error type="403" />);
     return(
-        <>
+        <div className="mainView">
         <Chessboard id="BasicBoard" boardOrientation={state.color} position={game.fen()} areArrowsAllowed={true} onPieceDrop={moveMethod} />
-        </>
+        <Paper>
+            <Box component="paper" sx={{p:3}}><br/>
+                <div className="boxStack">
+                    Player's name 
+                </div>       
+            </Box>
+        </Paper>
+        </div>
     );
 }
 

@@ -33,4 +33,16 @@ var putAvatar = (id, pathname) => {
     db.promise().query('UPDATE users SET avatar=? WHERE id=?',[pathname,id])
 }
 
-module.exports = {getUsers,getUser, putAvatar};
+var getLeaderboard = async () => {
+    var result = await db.promise().query("SELECT * FROM users ORDER BY rating DESC LIMIT 5")
+    var res = Array();
+    for (let i = 0; i < result[0].length; i++) {
+        let obj = Object();
+        obj.id = result[0][i].id;
+        obj.username = result[0][i].username;
+        obj.rating = result[0][i].rating;
+        res.push(obj);
+    }
+    return res;
+}
+module.exports = {getUsers,getUser, putAvatar, getLeaderboard};

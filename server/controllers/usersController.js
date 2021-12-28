@@ -20,8 +20,17 @@ var postUpload = (req, res) => {
     try {
         usersModel.putAvatar(req.session.identity,"/img/"+req.file.filename)
     }catch(err) {
-        res.status(404).send("Error 403");
+        res.status(404).send("Error 404");
     }
 }
 
-module.exports = {getUsers, getUser, postUpload}
+var getLeaderboard = async (req, res) => {
+    try {
+        var result = await usersModel.getLeaderboard();
+        res.json(result);
+    }catch(err) {
+        res.status(404).send("Error 404");
+    }
+}
+
+module.exports = {getUsers, getUser, postUpload, getLeaderboard}

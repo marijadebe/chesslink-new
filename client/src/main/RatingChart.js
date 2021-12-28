@@ -87,7 +87,7 @@ function RatingChart(props) {
     const theme = useTheme();
     const [isLoading, setIsLoading] = useState(true);
     useEffect(()=> {
-        axios.get('http://localhost:8000/api/users').then((result)=> {
+        axios.get('/api/users').then((result)=> {
             chartData = [];
             for(let i = 9; i < 25; i++) {
                 chartData.push({"name":(i+1)*100, "players":0});

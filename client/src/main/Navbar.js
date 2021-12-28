@@ -11,7 +11,7 @@ function Navbar() {
     const [isOpen, setIsOpen] = useState(false);
     return(
     <Box>
-      <AppBar position="static">
+      <AppBar position="fixed">
         <Toolbar>
           <IconButton
             size="large"

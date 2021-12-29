@@ -1,10 +1,7 @@
 import { Dialog, DialogTitle, DialogActions, DialogContent, Button, DialogContentText, Link } from '@mui/material';
-import { Link as RouterLink } from 'react-router-dom';
 import React from 'react';
-import { useTheme } from '@mui/material/styles';
 
 function InfoDialog(props) {
-    const theme = useTheme();
     const handleClose = () => {
         props.closeDialog();
     }

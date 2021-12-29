@@ -7,9 +7,10 @@ import '../css/Account.css';
 import { Avatar, Paper, Typography, Button, Divider, Fab, Tooltip } from "@mui/material";
 import SubdirectoryArrowLeftIcon from '@mui/icons-material/SubdirectoryArrowLeft';
 import MainDial from "../main/MainDial";
-import {socket,reconnectSocket} from "../socketInstance";
+import {socket} from "../socketInstance";
 import { sendFriendReq } from '../socketHelper';
 import PushNotification from "../pushnotifications/PushNotification";
+import Navbar from "../main/Navbar";
 axios.defaults.withCredentials = true;
 
 function Account(props) {
@@ -27,7 +28,7 @@ function Account(props) {
             setLoading(false);
             setError(true);
         })
-    },[])
+    },[name])
     var navigateBack = () => {
         navigate('/');
     }
@@ -36,6 +37,7 @@ function Account(props) {
     else {
         return(
             <>
+            <Navbar/>
             <Paper elevation={3} className="accountdisp">
                 <br/>
                 <Avatar src={data.avatar} sx={{height:60, width:60}} />
@@ -51,7 +53,7 @@ function Account(props) {
                 Personal information
                 </Typography>
                 <div className="info">
-                    Status: {data.online==1 ? "Online" : "Offline"}<br/>
+                    Status: {data.online === 1 ? "Online" : "Offline"}<br/>
                     Join date: {data.joindate}<br/>
                     Player ID: {data.id}<br/>
                 </div>

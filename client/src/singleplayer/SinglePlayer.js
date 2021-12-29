@@ -5,6 +5,7 @@ import Chess from 'chess.js';
 import {socket} from "../socketInstance";
 import "../css/Singleplayer.css";
 import Error from '../Error';
+import MainDial from '../main/MainDial';
 import {Box, Paper} from '@mui/material';
 
 function SinglePlayer() {
@@ -20,8 +21,7 @@ function SinglePlayer() {
         });
     }
     useEffect(()=> {
-        console.log(state);
-        if(state.color == "white") setYourMove(true);
+        if(state.color === "white") setYourMove(true);
         else {
             socket.emit("stockfishMove", game.fen())
         }
@@ -33,7 +33,7 @@ function SinglePlayer() {
         return () => {
             socket.off("stockfishMoveCallback")
         }
-    },[])
+    },[state])
     var moveMethod = (source,target,piece) => {
         var move = null;
         if(!yourMove) return false;
@@ -61,6 +61,7 @@ function SinglePlayer() {
                 </div>       
             </Box>
         </Paper>
+        <MainDial/>
         </div>
     );
 }

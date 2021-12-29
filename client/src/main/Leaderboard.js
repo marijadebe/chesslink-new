@@ -2,7 +2,7 @@ import React, {useState, useEffect} from 'react';
 import axios from 'axios';
 import Loading from '../Loading';
 import {Link as RouterLink} from 'react-router-dom';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Link, Typography, Divider } from '@mui/material';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Link, Typography, Divider } from '@mui/material';
 axios.defaults.withCredentials = true;
 
 function Leaderboard() {
@@ -33,7 +33,7 @@ function Leaderboard() {
                 <TableBody>
                 {data.map((row) => (
                     <TableRow
-                    key={row.name}
+                    key={row.username}
                     sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                     >
                     <TableCell component="th" scope="row">

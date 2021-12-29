@@ -1,5 +1,5 @@
 import React from 'react';
-import {CircularProgress, Box, Typography} from '@mui/material';
+import {CircularProgress, Box} from '@mui/material';
 import './css/Loading.css';
 
 function Loading() {

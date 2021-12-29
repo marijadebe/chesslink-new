@@ -22,7 +22,7 @@ function MainDial() {
     }
     var unLog = () => {
         deleteLogin();
-        navigate("signin");
+        navigate("/signin");
     }
     return(
         <>

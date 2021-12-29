@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { AccordionDetails, AccordionSummary, List, ListItem, ListItemAvatar, Avatar, Button } from '@mui/material';
+import { AccordionDetails, AccordionSummary, List } from '@mui/material';
 import MuiAccordion from '@mui/material/Accordion';
 import { styled } from '@mui/system';
 import socket from '../socketInstance';
@@ -30,16 +30,13 @@ function DrawerData() {
         }
     },[])
     const Accordion = styled((props) => (
-        <MuiAccordion disableGutters elevation={0} square {...props} />
-      ))(({ theme }) => ({
-        border: `1px solid ${theme.palette.divider}`,
-        '&:not(:last-child)': {
-          borderBottom: 0,
-        },
-        '&:before': {
-          display: 'none',
-        },
-      }));
+      <MuiAccordion disableGutters {...props} />
+    ))(({ theme }) => ({
+      '&:before': {
+        display: 'none',
+        border: 'none'
+    }
+    }));
     return(
         <>
         <Accordion>
@@ -49,7 +46,7 @@ function DrawerData() {
             <AccordionDetails>
               <List dense={true}>
                 {
-                  data.map((datapoint) => <DrawerDataPending data={datapoint}/>)
+                  data.length > 0 ? data.map((datapoint) => <DrawerDataPending data={datapoint}/>) : "You have no pending friends."
                 }
               </List>
             </AccordionDetails>

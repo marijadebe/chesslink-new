@@ -1,0 +1,25 @@
+.profile {
+    display:flex;
+    flex-direction: row;
+    margin-bottom: 10px;
+    align-items: center;
+}
+.showProf {
+    margin-left:auto;
+}
+.inputClass {
+    display: flex;
+    flex-direction: row;
+    margin-top: 8px;
+}
+.input {
+    flex:2;
+}
+.dataView {
+    flex-grow: 1;
+}
+.flexBox {
+    display: flex;
+    flex-direction: column;
+    height: 70%;
+}

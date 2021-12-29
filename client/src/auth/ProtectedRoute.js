@@ -26,7 +26,7 @@ function ProtectedRoute(props) {
             return <Loading />;
         case "True":
             if(props.requiresValid) {
-                if(authValid == 1) {
+                if(authValid === 1) {
                     return props.component;
                 }else {
                     return <Navigate to="/verify" />;

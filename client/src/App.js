@@ -8,6 +8,7 @@ import Login from "./auth/Login";
 import ProtectedRoute from './auth/ProtectedRoute';
 import SinglePlayer from './singleplayer/SinglePlayer';
 import Account from './account/Account.js';
+import Messages from './messages/Messages.js';
 import Error from "./Error";
 import ModeContext from './ModeContext';
 import {ThemeProvider, createTheme, CssBaseline, responsiveFontSizes} from "@mui/material";
@@ -19,9 +20,10 @@ function RoutesComponent() {
       <Route className="routegrade" path="/signin" element={<Login />} />
       <Route className="routegrade" path="/signup" element={<Register />} />
       <Route className="routegrade" path="/verify" element={<ProtectedRoute requiresValid={false} component={<Verify />} />} />
-      <Route className="routegrade" path="/" element={<ProtectedRoute requiresValid={true} component={<Main />} />} />
       <Route className="routegrade" path="/singleplayer" element={<ProtectedRoute requiresValid={true} component={<SinglePlayer />} />} />
       <Route className="routegrade" path="/users/:name" element={<ProtectedRoute requiresValid={true} component={<Account />} />} />
+      <Route className="routegrade" path="/messages/:name" element={<ProtectedRoute requiresValid={true} component={<Messages />} />} />
+      <Route className="routegrade" path="/" element={<ProtectedRoute requiresValid={true} component={<Main />} />} />
       <Route className="routegrade" path="*" element={<Error type="404" />} />
     </Routes>
   )

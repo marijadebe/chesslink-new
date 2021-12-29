@@ -19,6 +19,7 @@ const io = require('socket.io')(server, {
 const users = require('./routes/users')
 const auth = require('./routes/auth')
 const friends = require('./routes/friends')
+const messages = require('./routes/messages')
 const socketController = require('./controllers/socketController')
 
 //Middleware
@@ -50,6 +51,7 @@ io.use((socket,next) => {
 io.on("connection",socketController.onConnect)
 app.use('/api/users', users)
 app.use('/api/friends', friends)
+app.use('/api/messages', messages)
 app.use('/auth', auth)
 app.use(express.static('public'))
 

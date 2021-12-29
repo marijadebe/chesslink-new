@@ -1,4 +1,4 @@
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Divider, Grid, Typography, Input } from "@mui/material";
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Divider, Grid, Typography } from "@mui/material";
 import React, {useState} from "react";
 import "../css/ConfigurationModal.css";
 import axios from 'axios';

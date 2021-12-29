@@ -9,6 +9,7 @@ import "../css/Messages.css";
 import Navbar from '../main/Navbar';
 import SendIcon from '@mui/icons-material/Send';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import Message from './Message';
 axios.defaults.withCredentials = true;
 
 function Messages() {
@@ -55,7 +56,11 @@ function Messages() {
                 </div>
                 <Divider/>
                 <div className="dataView">
-
+                    {
+                        data.map((item)=>
+                            <Message className="dataChildren" isYourself={item.isSenderUser} content={item.message} time={item.sendtime} key={item.id} />
+                        )
+                    }
                 </div>
                 <Divider />
                 <span className="inputClass">

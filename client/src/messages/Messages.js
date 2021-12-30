@@ -4,12 +4,12 @@ import axios from 'axios';
 import Error from '../Error';
 import MainDial from '../main/MainDial';
 import PushNotification from '../pushnotifications/PushNotification';
-import { Avatar, Box, Divider, Paper, Badge, styled, Typography, IconButton, Tooltip, TextField, Button } from '@mui/material';
+import { Avatar, Box, Divider, Paper, Badge, styled, Typography, IconButton, Tooltip} from '@mui/material';
 import "../css/Messages.css";
 import Navbar from '../main/Navbar';
-import SendIcon from '@mui/icons-material/Send';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import Message from './Message';
+import {socket} from '../socketInstance';
+import MessageChat from './MessageChat';
 axios.defaults.withCredentials = true;
 
 function Messages() {
@@ -33,11 +33,6 @@ function Messages() {
         }
       }));
     useEffect(()=> {
-        axios.get('/api/messages/'+name).then((result)=> {
-            setData(result.data);
-        }).catch((err)=>{
-            setError(true);
-        })
         axios.get('/api/users/ANY/'+name).then((result)=> {
             setUserData(result.data);
         }).catch((err)=> {
@@ -48,24 +43,14 @@ function Messages() {
     return(
         <>
             <Navbar />
-            <Box component={Paper} p={3} width="90%" className="flexBox">
+            <Box component={Paper} p={3} sx={{paddingBottom:1}} width="90%" className="flexBox">
                 <div className="profile">
                 <StyledBadge anchorOrigin={{vertical: 'bottom',horizontal: 'right'}} variant="dot" overlap="circular" color={userData.online===1?"success":"error"}>
                     <Avatar src={userData.avatar} />
                 </StyledBadge>&nbsp;&nbsp;&nbsp;<Typography variant="h6">{userData.username}</Typography><span className="showProf"><Tooltip title="Show profile"><IconButton onClick={()=>navigate('/users/'+userData.username)}><AccountCircleIcon/></IconButton></Tooltip></span>
                 </div>
                 <Divider/>
-                <div className="dataView">
-                    {
-                        data.map((item)=>
-                            <Message className="dataChildren" isYourself={item.isSenderUser} content={item.message} time={item.sendtime} key={item.id} />
-                        )
-                    }
-                </div>
-                <Divider />
-                <span className="inputClass">
-                    <TextField variant="outlined" label="Type message" size="small" className="input" /><IconButton><SendIcon/></IconButton>
-                </span>
+                <MessageChat PlayerId={userData.id} nameProp={name} />
             </Box>
             <MainDial/>
             <PushNotification />

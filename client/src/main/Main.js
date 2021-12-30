@@ -46,25 +46,25 @@ function Main() {
         <Box sx={{ flexGrow: 1 }} p={3} sx={{marginTop: 7}}>
             <Grid container spacing={2}>
                 <Grid item xs={12} md={6}>
-                    <Item>
+                    <Item className="kidGrid" sx={{display:"flex",alignItems:"center",justifyContent:"center",flexDirection:"column"}}>
                         <Typography variant="h2">Lobby</Typography>
                         <LobbyDisplay />
                     </Item>
                 </Grid>
                 <Grid item xs={12} md={6}>
-                    <Item>
+                    <Item className="kidGrid">
                         <Typography variant="h2">Feed</Typography>
                         <iframe src={"https://lichess.org/training/frame?theme=brown&bg="+theme.palette.mode} className="lichessIframe" title="lichess_iframe" frameBorder="0"></iframe>
                     </Item>
                 </Grid>
                 <Grid item xs={12} md={8}>
-                    <Item className="content">
+                    <Item className="content" className="kidGrid">
                         <Typography variant="h2">Statistics&nbsp;<SelectChart signalChart={sendChartType}/></Typography>
                         {selectedChart}
                     </Item>
                 </Grid>
                 <Grid item xs={12} md={4}>
-                    <Item>
+                    <Item className="kidGrid">
                         <Typography variant="h2">Players</Typography>
                         <PlayersSearch />
                         <Leaderboard />

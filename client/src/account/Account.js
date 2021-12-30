@@ -42,7 +42,7 @@ function Account(props) {
                 <br/>
                 <Avatar src={data.avatar} sx={{height:60, width:60}} />
                 <Typography variant="h6">{data.username}</Typography>
-                <span><Button onClick={()=>sendFriendReq(socket,data.id)}>Add friend</Button><Button>Send message</Button></span>
+                <span><Button onClick={()=>sendFriendReq(socket,data.id)}>Add friend</Button><Button onClick={()=>navigate('/messages/'+name)}>Send message</Button></span>
                 <Divider style={{width:'95%'}} />
                 <Typography
                 sx={{ mt: 0.5, ml: 2 }}

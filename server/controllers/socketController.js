@@ -2,6 +2,7 @@ const chessEngine = require('js-chess-engine')
 
 var socketModel = require('../models/socketModel')
 var friendsModel = require('../models/friendsModel')
+var messagesModel = require('../models/messagesModel')
 var clients = []
 
 var onConnect = (socket) => {
@@ -37,6 +38,21 @@ var onConnect = (socket) => {
   })
   socket.on('declineFriendReq', async (id) => {
     friendsModel.declineFriend(socket.request.session.identity, id);
+  }) 
+  socket.on('sendMessageChat', async (data)=> {
+    var result = await messagesModel.postMessage(socket.request.session.identity, data.id, data.message);
+    if(result.sender == socket.request.session.identity) {
+      result.isSenderUser = true;
+    }else {
+      result.isSenderUser = false;
+    }
+    socket.emit("receiveMessageChat", result);
+    for(var client of clients) {
+      if(client.userid == data.id) {
+        result.isSenderUser = !result.isSenderUser;
+        socket.to(client.socketid).emit("receiveMessageChat", result);
+      }
+    }
   }) 
   socket.on("logout", () => {
     socketModel.postOnline(socket, false);

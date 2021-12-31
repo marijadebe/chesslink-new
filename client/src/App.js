@@ -13,6 +13,7 @@ import Error from "./Error";
 import ModeContext from './ModeContext';
 import {ThemeProvider, createTheme, CssBaseline, responsiveFontSizes} from "@mui/material";
 import { SnackbarProvider } from 'notistack';
+import Multiplayer from './multiplayer/Multiplayer';
 
 function RoutesComponent() {
   return(
@@ -21,6 +22,7 @@ function RoutesComponent() {
       <Route className="routegrade" path="/signup" element={<Register />} />
       <Route className="routegrade" path="/verify" element={<ProtectedRoute requiresValid={false} component={<Verify />} />} />
       <Route className="routegrade" path="/singleplayer" element={<ProtectedRoute requiresValid={true} component={<SinglePlayer />} />} />
+      <Route className="routegrade" path="/multiplayer/:id" element={<ProtectedRoute requiresValid={true} component={<Multiplayer />} />} />
       <Route className="routegrade" path="/users/:name" element={<ProtectedRoute requiresValid={true} component={<Account />} />} />
       <Route className="routegrade" path="/messages/:name" element={<ProtectedRoute requiresValid={true} component={<Messages />} />} />
       <Route className="routegrade" path="/" element={<ProtectedRoute requiresValid={true} component={<Main />} />} />

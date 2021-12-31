@@ -6,32 +6,40 @@ import {socket} from "../socketInstance";
 import "../css/Singleplayer.css";
 import Error from '../Error';
 import MainDial from '../main/MainDial';
-import {Box, Paper} from '@mui/material';
+import SinglePlayerModal from './SinglePlayerModal';
+import SinglePlayerPanel from './SinglePlayerPanel';
 
 function SinglePlayer() {
     const [game, setGame] = useState(new Chess());
-    var [yourMove, setYourMove] = useState(false);
+    const [gameOver, setGameOver] = useState("");
+    const [yourMove, setYourMove] = useState(false);
     var state = useLocation().state;
-    
     var safeGameMutate = (modify) => {
         setGame((g) => {
-        const update = { ...g };
-        modify(update);
-        return update;
+            const update = { ...g };
+            modify(update);
+            return update;
         });
     }
     useEffect(()=> {
         if(state.color === "white") setYourMove(true);
         else {
-            socket.emit("stockfishMove", game.fen())
+            socket.emit("stockfishMove", game.fen());
         }
-        //Sem prijde socket.on a socket.off pri tahu PC
         socket.on("stockfishMoveCallback", (fen) => {
             setGame(new Chess(fen));
             setYourMove(true);
         })
+        socket.on("stockfishMoveWin", () => {
+            setGameOver("youwon")
+        })
+        socket.on("stockfishMoveLoss", () => {
+            setGameOver("comwon")
+        })
         return () => {
             socket.off("stockfishMoveCallback")
+            socket.off("stockfishMoveWin")
+            socket.off("stockfishMoveLoss")
         }
     },[state])
     var moveMethod = (source,target,piece) => {
@@ -49,18 +57,12 @@ function SinglePlayer() {
           socket.emit("stockfishMove",game.fen());
           return true;  
     }
-
-    if(state == null) return(<Error type="403" />);
+    if(state === null) return(<Error type="403" />);
     return(
         <div className="mainView">
         <Chessboard id="BasicBoard" boardOrientation={state.color} position={game.fen()} areArrowsAllowed={true} onPieceDrop={moveMethod} />
-        <Paper>
-            <Box component="paper" sx={{p:3}}><br/>
-                <div className="boxStack">
-                    Player's name 
-                </div>       
-            </Box>
-        </Paper>
+        <SinglePlayerPanel color={state.color} level={state.difficulty}/>
+        {gameOver !== "" && <SinglePlayerModal content={gameOver} />}
         <MainDial/>
         </div>
     );

@@ -16,6 +16,15 @@ var getUser = async (req, res) => {
         res.status(404).send("Error 404");
     }
 }
+var getYourself = async (req,res) => {
+    try {
+        var result = await usersModel.getUser(req.session.identity, "ANY");
+        res.json(result);
+    }catch(err) {
+        res.status(404).send("Error 404");
+    }
+}
+
 var postUpload = (req, res) => {
     try {
         usersModel.putAvatar(req.session.identity,"/img/"+req.file.filename)
@@ -32,5 +41,4 @@ var getLeaderboard = async (req, res) => {
         res.status(404).send("Error 404");
     }
 }
-
-module.exports = {getUsers, getUser, postUpload, getLeaderboard}
+module.exports = {getUsers, getUser, postUpload, getLeaderboard, getYourself}

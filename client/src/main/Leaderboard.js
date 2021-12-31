@@ -11,7 +11,7 @@ function Leaderboard() {
         axios.get('/api/users/leaderboard').then((res)=> {
             setData(res.data)
         })
-    })
+    },[])
     if(data.length <= 0) return <Loading />
     return(
         <>

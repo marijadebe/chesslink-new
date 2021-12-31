@@ -8,13 +8,11 @@ import { Avatar, Box, Divider, Paper, Badge, styled, Typography, IconButton, Too
 import "../css/Messages.css";
 import Navbar from '../main/Navbar';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import {socket} from '../socketInstance';
 import MessageChat from './MessageChat';
 axios.defaults.withCredentials = true;
 
 function Messages() {
     const [error, setError] = useState(false);
-    const [data, setData] = useState([]);
     const [userData, setUserData] = useState([]);
     const {name} = useParams();
     var navigate = useNavigate();

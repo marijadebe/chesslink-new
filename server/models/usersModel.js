@@ -45,4 +45,10 @@ var getLeaderboard = async () => {
     }
     return res;
 }
-module.exports = {getUsers,getUser, putAvatar, getLeaderboard};
+
+var addRating = (id, amount) => {
+    db.promise().query('UPDATE users SET rating=rating+? WHERE id=?',[amount,id]);
+}
+
+
+module.exports = {getUsers,getUser, putAvatar, getLeaderboard, addRating};

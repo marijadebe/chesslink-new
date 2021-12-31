@@ -43,7 +43,7 @@ function Main() {
         <>
         <Box className="mainview" sx={{ flexGrow: 1 }}>
         <Navbar />
-        <Box sx={{ flexGrow: 1 }} p={3} sx={{marginTop: 7}}>
+        <Box sx={{ flexGrow: 1,marginTop: 7 }} p={3}>
             <Grid container spacing={2}>
                 <Grid item xs={12} md={6}>
                     <Item className="kidGrid" sx={{display:"flex",alignItems:"center",justifyContent:"center",flexDirection:"column"}}>

@@ -1,8 +1,10 @@
 const chessEngine = require('js-chess-engine')
-
+const { Chess } = require('chess.js')
 var socketModel = require('../models/socketModel')
 var friendsModel = require('../models/friendsModel')
 var messagesModel = require('../models/messagesModel')
+var boardsModel = require('../models/boardsModel')
+const { addRating } = require('../models/usersModel.js')
 var clients = []
 
 var onConnect = (socket) => {
@@ -24,9 +26,19 @@ var onConnect = (socket) => {
     }
   })
   socket.on("stockfishMove", (fen) => {
+    var chess = new Chess(fen);
+    if(chess.game_over()) { //player checkmate
+      socket.emit("stockfishMoveWin");
+      addRating(socket.request.session.identity, 5);
+      return;
+    }
     let game = new chessEngine.Game(fen)
     game.aiMove(2)
     var data = game.exportFEN()
+    chess = new Chess(data);
+    if(chess.game_over()) { //computer checkmate
+      socket.emit("stockfishMoveLoss");
+    }
     socket.emit("stockfishMoveCallback", data)
   })
   socket.on("getFriendsData", async ()=> {
@@ -58,6 +70,27 @@ var onConnect = (socket) => {
     socketModel.postOnline(socket, false);
     socket.request.session.destroy();
     clients = clients.filter(client => client.socketid != socket.id)
+  })
+  socket.on("joinRoom", (id) => {
+    socket.join("room"+id);
+  })
+  //state.color("white"/"black"),state.format([?"cam",?"mic"]),state.player(callee's id)
+  socket.on("callFriend", async (state)=> {
+    let playerWhite; let playerBlack;
+    if(state.color == "white") {
+      playerWhite = socket.request.session.identity;
+      playerBlack = state.player;
+    }else {
+      playerWhite = state.player;
+      playerBlack = socket.request.session.identity;
+    }
+    var resId = await boardsModel.postBoard('rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1', false, playerWhite, playerBlack);
+    socket.emit("callFriendCallback", resId);
+    for(client of clients) {
+      if(client.userid == state.player) {
+        socket.to(client.socketid).emit("friendCalling", socket.request.session.identity, resId)
+      }
+    }
   })
 }
   

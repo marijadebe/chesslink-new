@@ -46,7 +46,7 @@ function DrawerData() {
             <AccordionDetails>
               <List dense={true}>
                 {
-                  data.length > 0 ? data.map((datapoint) => <DrawerDataPending data={datapoint}/>) : "You have no pending friends."
+                  data.length > 0 ? data.map((datapoint) => <DrawerDataPending key={datapoint.id} data={datapoint}/>) : "You have no pending friends."
                 }
               </List>
             </AccordionDetails>
@@ -58,7 +58,7 @@ function DrawerData() {
             <AccordionDetails>
                 <List dense={true}>
                   {
-                    dataFriend.map((datapoint) => <DrawerDataFriend data={datapoint} token={recognitionToken}/>)
+                    dataFriend.map((datapoint) => <DrawerDataFriend key={datapoint.id} data={datapoint} token={recognitionToken}/>)
                   }
                 </List>
             </AccordionDetails>

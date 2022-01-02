@@ -8,7 +8,7 @@ import { useNavigate } from "react-router";
 import ModeContext from "../ModeContext";
 import ConfigurationModal from "./ConfigurationModal";
 
-function MainDial() {
+function MainDial({isLeft}) {
     var navigate = useNavigate();
     const {colorMode,setColorMode} = useContext(ModeContext);
     const [isConfOpen, setConfOpen] = useState(false);
@@ -29,7 +29,7 @@ function MainDial() {
         <ConfigurationModal open={isConfOpen} handleClose={()=>setConfOpen(false)} />
         <SpeedDial
         ariaLabel="Display more"
-        sx={{ position: 'fixed', bottom: 16, right: 16 }}
+        sx={isLeft ? { position: 'fixed', bottom: 16, left: 16 } : { position:'fixed', bottom: 16, right: 16 }}
         icon={<SpeedDialIcon />}
         >
             <SpeedDialAction icon={<LogoutIcon />} onClick={()=>unLog()} tooltipTitle="Logout" />

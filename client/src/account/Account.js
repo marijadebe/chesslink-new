@@ -4,7 +4,7 @@ import Error from "../Error";
 import axios from 'axios';
 import Loading from "../Loading";
 import '../css/Account.css';
-import { Avatar, Paper, Typography, Button, Divider, Fab, Tooltip } from "@mui/material";
+import { Avatar, Paper, Typography, Button, Divider, Fab, Tooltip, Box } from "@mui/material";
 import SubdirectoryArrowLeftIcon from '@mui/icons-material/SubdirectoryArrowLeft';
 import MainDial from "../main/MainDial";
 import {socket} from "../socketInstance";
@@ -36,7 +36,7 @@ function Account(props) {
     else if(error) {return(<Error type="404" />)}
     else {
         return(
-            <>
+            <Box sx={{ display:"flex", flexGrow: 1, alignItems:"center", height:"100%",flexDirection:"column",justifyContent:"space-between" }}>
             <Navbar/>
             <Paper elevation={3} className="accountdisp">
                 <br/>
@@ -58,6 +58,7 @@ function Account(props) {
                     Player ID: {data.id}<br/>
                 </div>
             </Paper>
+            <div></div>
             <div className="goback">
             <Tooltip title="Go back">
                 <Fab color="secondary" aria-label="add" onClick={()=>navigateBack()}>
@@ -67,7 +68,7 @@ function Account(props) {
             </div>
             <MainDial/>
             <PushNotification />
-            </>
+            </Box>
         );
     }
 }

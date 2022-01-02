@@ -11,8 +11,6 @@ function LobbyDisplayModalComputerForm(props) {
     }
     return( 
         <Box component="form" p={3} sx={{display:'flex',flexDirection:'column'}}>
-            <FormLabel>Time control</FormLabel>
-            <Slider aria-label="Volume" valueLabelDisplay="auto"/>
             <FormLabel>Choose color</FormLabel>
             <Select value={props.color} onChange={(event)=>changeColor(event.target.value)}>
                 <MenuItem value="black">Black</MenuItem>

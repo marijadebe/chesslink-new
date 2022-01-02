@@ -5,7 +5,7 @@ import RatingChart from './RatingChart';
 import SelectChart from './SelectChart';
 import LobbyDisplay from './LobbyDisplay';
 import axios from 'axios';
-import {socket, reconnectSocket} from "../socketInstance";
+import {reconnectSocket} from "../socketInstance";
 import "../css/Main.css";
 import Navbar from './Navbar';
 import MainDial from "./MainDial";
@@ -37,13 +37,13 @@ function Main() {
         }
     }
     useEffect(()=> {
-        reconnectSocket()
+        reconnectSocket();
     },[])
     return(
         <>
         <Box className="mainview" sx={{ flexGrow: 1 }}>
         <Navbar />
-        <Box sx={{ flexGrow: 1,marginTop: 7 }} p={3}>
+        <Box p={3}>
             <Grid container spacing={2}>
                 <Grid item xs={12} md={6}>
                     <Item className="kidGrid" sx={{display:"flex",alignItems:"center",justifyContent:"center",flexDirection:"column"}}>

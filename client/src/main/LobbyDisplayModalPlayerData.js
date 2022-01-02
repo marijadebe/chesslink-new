@@ -1,7 +1,7 @@
 import { Avatar, Badge, ListItem, ListItemAvatar, ListItemButton, ListItemText, styled } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 
-function LobbyDisplayModalPlayerData({datapoint, selectedIndex, listItemClick, token}) {
+function LobbyDisplayModalPlayerData({datapoint, selectedIndex, listItemClick, token, keyProp}) {
     const [data, setData] = useState([]);
     useEffect(()=> {    
         if(token === datapoint.offeror.id) {
@@ -32,12 +32,12 @@ function LobbyDisplayModalPlayerData({datapoint, selectedIndex, listItemClick, t
                 selected={selectedIndex === data.id}
                 onClick={(event) => handleListItemClick(event, data.id)}
                 >
-            <ListItemAvatar>
-            <StyledBadge anchorOrigin={{vertical: 'bottom',horizontal: 'right'}} variant="dot" overlap="circular" color={data.online===1?"success":"error"}>
+            <ListItemAvatar key={data.id}>
+            <StyledBadge key={data.id} anchorOrigin={{vertical: 'bottom',horizontal: 'right'}} variant="dot" overlap="circular" color={data.online===1?"success":"error"}>
                 <Avatar src={data.avatar} />
             </StyledBadge>
             </ListItemAvatar>
-            <ListItemText primary={data.username}/>
+            <ListItemText key={data.id} primary={data.username}/>
         </ListItemButton>
     );  
 }

@@ -1,3 +1,5 @@
+module.exports = function (io) {
+
 const chessEngine = require('js-chess-engine')
 const { Chess } = require('chess.js')
 var socketModel = require('../models/socketModel')
@@ -5,9 +7,9 @@ var friendsModel = require('../models/friendsModel')
 var messagesModel = require('../models/messagesModel')
 var boardsModel = require('../models/boardsModel')
 const { addRating } = require('../models/usersModel.js')
-var clients = []
 
-var onConnect = (socket) => {
+var clients = []
+io.on("connection", (socket) =>{
   socketModel.postOnline(socket, true);
   if(socket.request.session.identity != undefined) clients.push({"socketid":socket.id,"userid":socket.request.session.identity})
   socket.once("disconnect", () => {
@@ -71,10 +73,45 @@ var onConnect = (socket) => {
     socket.request.session.destroy();
     clients = clients.filter(client => client.socketid != socket.id)
   })
+
+  
   socket.on("joinRoom", (id) => {
-    socket.join("room"+id);
+    var roomName = "room"+id;
+    socket.join(roomName);
+    try {
+      var room = io.sockets.adapter.rooms.get(roomName);
+      io.sockets.in(roomName).emit('joinRoomCallback', room.size);
+    }catch(err) {
+
+    }
   })
-  //state.color("white"/"black"),state.format([?"cam",?"mic"]),state.player(callee's id)
+  socket.on("leaveRoom", (id) => {
+    var roomName = "room"+id;
+    socket.leave(roomName);
+    try {
+      var room = io.sockets.adapter.rooms.get(roomName);
+      io.sockets.in(roomName).emit('joinRoomCallback', room.size);
+    }catch(err) {
+
+    } 
+  })
+  /**
+   * Triggered when player makes valid move.
+   * @param {String} fen - FEN of the new board position.
+   * @param {Number} id - room ID
+   */
+  socket.on("moveRoom", (fen, id) => {
+    var roomName = "room"+id;
+    socket.to(roomName).emit('gameMutate', fen)
+    boardsModel.putBoard(fen, id);
+  })
+  /**
+   * Trigger when player calls his friend.
+   * @param {Object} state - Object containing call information.
+   * @param {String} state.color - Color of the caller. Either "white" or "black".
+   * @param {Array} state.format - Array that contains "mic" and/or "cam" depending on which one's player wants to enable on room join.
+   * @param {Number} state.player - ID of the player being called.
+   */
   socket.on("callFriend", async (state)=> {
     let playerWhite; let playerBlack;
     if(state.color == "white") {
@@ -93,5 +130,6 @@ var onConnect = (socket) => {
     }
   })
 }
-  
-module.exports = {onConnect};
+);
+
+}

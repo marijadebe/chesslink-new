@@ -1,4 +1,4 @@
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, FormLabel, List, ToggleButtonGroup, ToggleButton, styled, Select, MenuItem } from '@mui/material';
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, FormLabel, List, ToggleButtonGroup, ToggleButton, Select, MenuItem } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import axios from "axios";
 import socket from '../socketInstance';
@@ -18,7 +18,8 @@ function LobbyDisplayModalPlayer(props) {
     const [recognitionToken, setRecognitionToken] = useState(0);
     useEffect(()=>socket.emit("getFriendsData"),[])
     useEffect(()=> {
-        socket.on("getFriendsDataCallback",(datas,identifier)=>{
+        socket.on("getFriendsDataCallback",(datas,identifier) => {
+          console.log(datas);
           var dataF = JSON.parse(datas)
           dataF = dataF.filter(item => item.accepted !== 0);
           setData(dataF);
@@ -43,7 +44,7 @@ function LobbyDisplayModalPlayer(props) {
                     {data.length <= 0 && <Loading/>}
                     {data.map((item) => (
                         <>
-                         <LobbyDisplayModalPlayerData key={item.id} datapoint={item} selectedIndex={selectedIndex} listItemClick={(evt,index)=>setSelectedIndex(index)} token={recognitionToken} />
+                         <LobbyDisplayModalPlayerData key={item.id} keyProp={item.id} datapoint={item} selectedIndex={selectedIndex} listItemClick={(evt,index)=>setSelectedIndex(index)} token={recognitionToken} />
                         </>
                     ))}
                 </List>

@@ -39,9 +39,9 @@ function Messages() {
     },[])
     if(error) return <Error type="404" />;
     return(
-        <>
+        <Box className="mainview" sx={{ flexGrow: 1,alignItems:"center" }}>
             <Navbar />
-            <Box component={Paper} p={3} sx={{paddingBottom:1}} width="90%" className="flexBox">
+            <Box component={Paper} p={3} sx={{paddingBottom:1,marginTop:5}} width="90%" className="flexBox">
                 <div className="profile">
                 <StyledBadge anchorOrigin={{vertical: 'bottom',horizontal: 'right'}} variant="dot" overlap="circular" color={userData.online===1?"success":"error"}>
                     <Avatar src={userData.avatar} />
@@ -50,9 +50,9 @@ function Messages() {
                 <Divider/>
                 <MessageChat PlayerId={userData.id} nameProp={name} />
             </Box>
-            <MainDial/>
+            <MainDial isLeft={true} />
             <PushNotification />
-        </>
+        </Box>
     );
 }
 

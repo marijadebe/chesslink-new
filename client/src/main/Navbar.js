@@ -7,11 +7,11 @@ import MenuIcon from '@mui/icons-material/Menu';
 import DrawerData from './DrawerData';
 import { Drawer } from '@mui/material';
 
-function Navbar() {
+function Navbar({isStatic}) {
     const [isOpen, setIsOpen] = useState(false);
     return(
-    <Box>
-      <AppBar position="fixed">
+      <>
+      <AppBar position="sticky">
         <Toolbar>
           <IconButton
             size="large"
@@ -33,7 +33,7 @@ function Navbar() {
       >
       <DrawerData/>
       </Drawer>
-    </Box>
+    </>
     );
 }
 

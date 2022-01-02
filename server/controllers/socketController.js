@@ -40,6 +40,7 @@ io.on("connection", (socket) =>{
     chess = new Chess(data);
     if(chess.game_over()) { //computer checkmate
       socket.emit("stockfishMoveLoss");
+      addRating(socket.request.session.identity, -5);
     }
     socket.emit("stockfishMoveCallback", data)
   })
@@ -101,9 +102,15 @@ io.on("connection", (socket) =>{
    * @param {Number} id - room ID
    */
   socket.on("moveRoom", (fen, id) => {
+    var chess = new Chess(fen);
     var roomName = "room"+id;
-    socket.to(roomName).emit('gameMutate', fen)
-    boardsModel.putBoard(fen, id);
+    if(chess.game_over()) {
+      io.sockets.in(roomName).emit('playerWon', fen, socket.request.session.identity);
+      addRating(socket.request.session.identity, 5);
+    }else {
+      socket.to(roomName).emit('gameMutate', fen)
+      boardsModel.putBoard(fen, id);
+    }
   })
   /**
    * Trigger when player calls his friend.

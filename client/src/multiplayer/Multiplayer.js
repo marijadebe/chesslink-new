@@ -17,7 +17,7 @@ function Multiplayer() {
     const {id} = useParams();
     const [isPlaying, setIsPlaying] = useState(false);
     const [data, setData] = useState({});
-    const [gameOver, setGameOver] = useState(false);
+    const [gameOver, setGameOver] = useState(-1);
     const [yourMove, setYourMove] = useState(false);
     var safeGameMutate = (modify) => {
         setGame((g) => {
@@ -61,12 +61,18 @@ function Multiplayer() {
             }
         })
         socket.on("gameMutate", (fen) => {
-            setYourMove(true);
+            setYourMove(true)
             setGame(new Chess(fen))
+        })
+        socket.on("playerWon", (fen,id)=>{
+            setYourMove(false)
+            setGame(new Chess(fen))
+            setGameOver(id)
         })
         return () => {
             socket.off("joinRoomCallback")
             socket.off("gameMutate")
+            socket.off("playerWon")
             socket.emit("leaveRoom", id)
         }
     },[])
@@ -76,7 +82,7 @@ function Multiplayer() {
         <div className="mainView">
             <Chessboard id="BasicBoard" position={game.fen()} areArrowsAllowed={true} onPieceDrop={moveMethod} boardOrientation={data.yourself===data.playerWhite ? "white" : "black"} />
             <MultiplayerPanel data={data} />
-            {gameOver !== "" && <MultiplayerModal content={gameOver} />}
+            {gameOver !== -1 && <MultiplayerModal content={gameOver} />}
             <MainDial/>
             <PushNotification/>
         </div>

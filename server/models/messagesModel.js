@@ -1,5 +1,17 @@
+/**
+ * @namespace Models/Messages
+ */
 const db = require('./database')
 
+/**
+ * Get all messages between two users
+ * @async
+ * @param {Number} oneid 
+ * @param {Number} twoid 
+ * @returns {Array} 
+ * @memberof Models/Messages
+ * @inner
+ */
 var getMessages = async (oneid, twoid) => {
     var result = await db.promise().query("SELECT * FROM messages WHERE (sender=? AND receiver=?) OR (sender=? AND receiver=?) ORDER BY sendtime DESC LIMIT 8",[oneid,twoid,twoid,oneid])
     var arr = Array();
@@ -19,7 +31,16 @@ var getMessages = async (oneid, twoid) => {
     }
     return arr;
 }
-
+/**
+ * Post message between users
+ * @async
+ * @param {Number} sender 
+ * @param {Number} receiver 
+ * @param {String} message 
+ * @returns {Object} 
+ * @memberof Models/Messages
+ * @inner
+ */
 var postMessage = async (sender, receiver, message) => {
     db.promise().query("INSERT INTO messages(sender,receiver,message) VALUES (?,?,?)",[sender,receiver,message])
     var result = await db.promise().query("SELECT * FROM messages WHERE sender=? AND receiver=? AND message=? ORDER BY sendtime DESC LIMIT 1",[sender,receiver,message])

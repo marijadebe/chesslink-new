@@ -19,6 +19,7 @@ function Multiplayer() {
     const [data, setData] = useState({});
     const [gameOver, setGameOver] = useState(-1);
     const [yourMove, setYourMove] = useState(false);
+
     var safeGameMutate = (modify) => {
         setGame((g) => {
             const update = { ...g };
@@ -76,6 +77,7 @@ function Multiplayer() {
             socket.emit("leaveRoom", id)
         }
     },[])
+    
     if(!isPlaying) return(<><Loading />Waiting for opponent...</>);
     if(Object.keys(data).length === 0) return(<><Loading />Fetching from API...</>);
     return(

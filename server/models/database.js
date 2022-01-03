@@ -1,5 +1,9 @@
 const mysql = require('mysql2')
 
+/**
+ * Create database driver object
+ * @type {Object}
+ */
 const connection = mysql.createConnection({
     host: process.env.DB_HOST,
     password: process.env.DB_PASS,

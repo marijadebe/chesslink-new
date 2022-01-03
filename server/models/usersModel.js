@@ -1,6 +1,16 @@
+/**
+ * @namespace Models/Users
+ */
 const db = require('./database')
 const ip = require('ip')
 
+/**
+ * Get all users
+ * @async
+ * @returns {Array} 
+ * @memberof Models/Users
+ * @inner
+ */
 var getUsers = async () => {
     var result = await db.promise().query("SELECT * FROM users");
     var arr = [];
@@ -16,6 +26,15 @@ var getUsers = async () => {
     }
     return arr;
 }
+/**
+ * Get specific user by ID and/or username
+ * @async
+ * @param {Number} id 
+ * @param {String} username 
+ * @returns {Object} 
+ * @memberof Models/Users
+ * @inner
+ */
 var getUser = async (id,username) => {
     var result = await db.promise().query('SELECT * FROM users WHERE id=? or username=?', [id,username]);
     var arr = new Object();
@@ -28,11 +47,25 @@ var getUser = async (id,username) => {
     arr.avatar = "http://"+ip.address()+":8000"+result[0][0].avatar;
     return arr;
 }
-
+/**
+ * Update users profile picture 
+ * @function
+ * @param {Number} id 
+ * @param {String} pathname
+ * @memberof Models/Users
+ * @inner
+ */
 var putAvatar = (id, pathname) => {
     db.promise().query('UPDATE users SET avatar=? WHERE id=?',[pathname,id])
 }
 
+/**
+ * Select top 5 players
+ * @async
+ * @returns {Array} 
+ * @memberof Models/Users
+ * @inner
+ */
 var getLeaderboard = async () => {
     var result = await db.promise().query("SELECT * FROM users ORDER BY rating DESC LIMIT 5")
     var res = Array();
@@ -46,9 +79,15 @@ var getLeaderboard = async () => {
     return res;
 }
 
+/**
+ * Set new rating of user
+ * @param {Number} id 
+ * @param {Number} amount  
+ * @memberof Models/Users
+ * @inner
+ */
 var addRating = (id, amount) => {
     db.promise().query('UPDATE users SET rating=rating+? WHERE id=?',[amount,id]);
 }
-
 
 module.exports = {getUsers,getUser, putAvatar, getLeaderboard, addRating};

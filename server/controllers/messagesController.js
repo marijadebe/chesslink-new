@@ -1,6 +1,17 @@
+/**
+ * @namespace Controllers/Messages
+ */
 const messagesModel = require('../models/messagesModel')
 const usersModel = require('../models/usersModel')
 
+/**
+ * Get all messages between two users
+ * @async
+ * @param {Object} req 
+ * @param {Object} res 
+ * @memberof Controllers/Messages
+ * @inner
+ */
 var getMessages = async (req, res) => {
     try {
         var resource = await usersModel.getUser(-1,req.params.username)

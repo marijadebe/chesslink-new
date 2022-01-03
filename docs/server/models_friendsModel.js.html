@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: models/friendsModel.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: models/friendsModel.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * @namespace Models/Friends
+ */
+const db = require('./database')
+const ip = require('ip')
+
+//OFFEROR NE OFFERER, OFFEROR NE OFFERER
+
+/**
+ * Get all friends in table friends
+ * @async
+ * @returns {Array} 
+ * @memberof Models/Friends
+ * @inner
+ */
+var getFriends = async () => {
+    var result = await db.promise().query('SELECT * FROM friends')
+    return result[0]
+}
+
+/**
+ * Get all friends of one user specified by ID
+ * @async
+ * @param {Number} player 
+ * @returns {Array} 
+ * @memberof Models/Friends
+ * @inner
+ */
+var getFriendsSpecific = async (player) => {
+    var result = await db.promise().query("SELECT friends.id AS frid,friends.accepted AS frac,us1.id AS us1id,us1.username AS us1us,us1.avatar AS us1av,us2.id AS us2id,us2.username AS us2us, us2.avatar AS us2av, us1.online AS us1on, us2.online AS us2on FROM friends JOIN users AS us1 ON friends.offeror=us1.id JOIN users AS us2 ON friends.offeree=us2.id WHERE offeror=? OR offeree=? GROUP BY friends.id",[player,player])
+    var arr = Array();
+    for(var i = 0; i &lt; result[0].length; i++) {
+        let obj = new Object();
+        obj.id = result[0][i].frid;
+        obj.offeror = {"id":result[0][i].us1id,"username":result[0][i].us1us,"avatar":"http://"+ip.address()+":8000"+result[0][i].us1av,"online":result[0][i].us1on};
+        obj.offeree = {"id":result[0][i].us2id,"username":result[0][i].us2us,"avatar":"http://"+ip.address()+":8000"+result[0][i].us2av,"online":result[0][i].us2on};
+        obj.accepted = result[0][i].frac;
+        arr.push(obj)
+    }
+    return arr;
+}
+
+/**
+ * Get friend either by id or by offeror/offeree's ID
+ * @async
+ * @param {Number} id 
+ * @param {Number} offeror 
+ * @param {Number} offeree 
+ * @returns {Object} 
+ * @memberof Models/Friends
+ * @inner
+ */
+var getFriend = async (id,offeror,offeree) => {
+    var result = await db.promise().query('SELECT * FROM friends WHERE id=? OR (offeror=? OR offeree=?)',[id,offeror,offeree]);
+    var arr = new Object();
+    arr.id = result[0][0].id;
+    arr.offeror = result[0][0].offeror;
+    arr.offeree = result[0][0].offeree; 
+    return arr;
+}
+/**
+ * Insert friendship
+ * @param {Number} offeror 
+ * @param {Number} offeree  
+ * @memberof Models/Friends
+ * @inner
+ */
+var postFriend = (offeror,offeree) => {
+    db.promise().query('INSERT INTO friends(offeror,offeree) VALUES(?,?)',[offeror,offeree])
+}
+/**
+ * Check if friendship exists
+ * @async
+ * @param {Number} offeror 
+ * @param {Number} offeree 
+ * @returns {String} 
+ * @memberof Models/Friends
+ * @inner
+ */
+var checkIfFriendExists = async (offeror, offeree) => {
+    var result = await db.promise().query('SELECT * FROM friends WHERE (offeror=? and offeree=?) OR (offeror=? AND offeree=?)',[offeror,offeree,offeree,offeror])
+    if(result[0].length > 0) {
+        return "error";
+    }else {
+        return "success";
+    }
+}
+/**
+ * Set friendship as accepted
+ * @param {Number} offeree 
+ * @param {Number} offeror  
+ * @memberof Models/Friends
+ * @inner
+ */
+var acceptFriend = (offeree, offeror) => {
+    db.promise().query('UPDATE friends SET accepted=1 WHERE offeror=? AND offeree =?',[offeror,offeree])
+}
+/**
+ * Set friendship as declined
+ * @param {Number} offeree 
+ * @param {Number} offeror  
+ * @memberof Models/Friends
+ * @inner
+ */
+var declineFriend = (offeree, offeror) => {
+    db.promise().query('DELETE FROM friends WHERE offeror=? AND offeree=?',[offeror,offeree])
+}
+
+module.exports = {getFriends, getFriend, postFriend, checkIfFriendExists, getFriendsSpecific, acceptFriend, declineFriend}</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-server.html">server</a></li></ul><h3>Namespaces</h3><ul><li><a href="Controllers_Auth.html">Controllers/Auth</a></li><li><a href="Controllers_Boards.html">Controllers/Boards</a></li><li><a href="Controllers_Friends.html">Controllers/Friends</a></li><li><a href="Controllers_Messages.html">Controllers/Messages</a></li><li><a href="Controllers_Socket.html">Controllers/Socket</a></li><li><a href="Controllers_Users.html">Controllers/Users</a></li><li><a href="Models_Auth.html">Models/Auth</a></li><li><a href="Models_Boards.html">Models/Boards</a></li><li><a href="Models_Friends.html">Models/Friends</a></li><li><a href="Models_Messages.html">Models/Messages</a></li><li><a href="Models_Socket.html">Models/Socket</a></li><li><a href="Models_Users.html">Models/Users</a></li><li><a href="Routes_Auth.html">Routes/Auth</a></li><li><a href="Routes_Boards.html">Routes/Boards</a></li><li><a href="Routes_Friends.html">Routes/Friends</a></li><li><a href="Routes_Messages.html">Routes/Messages</a></li><li><a href="Routes_Users.html">Routes/Users</a></li></ul><h3>Global</h3><ul><li><a href="global.html#connection">connection</a></li><li><a href="global.html#postUpload">postUpload</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.7</a> on Mon Jan 03 2022 12:54:27 GMT+0100 (Středoevropský standardní čas)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

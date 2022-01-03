@@ -1,12 +1,31 @@
+/**
+ * @namespace Models/Friends
+ */
 const db = require('./database')
 const ip = require('ip')
 
-
 //OFFEROR NE OFFERER, OFFEROR NE OFFERER
+
+/**
+ * Get all friends in table friends
+ * @async
+ * @returns {Array} 
+ * @memberof Models/Friends
+ * @inner
+ */
 var getFriends = async () => {
     var result = await db.promise().query('SELECT * FROM friends')
     return result[0]
 }
+
+/**
+ * Get all friends of one user specified by ID
+ * @async
+ * @param {Number} player 
+ * @returns {Array} 
+ * @memberof Models/Friends
+ * @inner
+ */
 var getFriendsSpecific = async (player) => {
     var result = await db.promise().query("SELECT friends.id AS frid,friends.accepted AS frac,us1.id AS us1id,us1.username AS us1us,us1.avatar AS us1av,us2.id AS us2id,us2.username AS us2us, us2.avatar AS us2av, us1.online AS us1on, us2.online AS us2on FROM friends JOIN users AS us1 ON friends.offeror=us1.id JOIN users AS us2 ON friends.offeree=us2.id WHERE offeror=? OR offeree=? GROUP BY friends.id",[player,player])
     var arr = Array();
@@ -20,6 +39,17 @@ var getFriendsSpecific = async (player) => {
     }
     return arr;
 }
+
+/**
+ * Get friend either by id or by offeror/offeree's ID
+ * @async
+ * @param {Number} id 
+ * @param {Number} offeror 
+ * @param {Number} offeree 
+ * @returns {Object} 
+ * @memberof Models/Friends
+ * @inner
+ */
 var getFriend = async (id,offeror,offeree) => {
     var result = await db.promise().query('SELECT * FROM friends WHERE id=? OR (offeror=? OR offeree=?)',[id,offeror,offeree]);
     var arr = new Object();
@@ -28,9 +58,25 @@ var getFriend = async (id,offeror,offeree) => {
     arr.offeree = result[0][0].offeree; 
     return arr;
 }
+/**
+ * Insert friendship
+ * @param {Number} offeror 
+ * @param {Number} offeree  
+ * @memberof Models/Friends
+ * @inner
+ */
 var postFriend = (offeror,offeree) => {
     db.promise().query('INSERT INTO friends(offeror,offeree) VALUES(?,?)',[offeror,offeree])
 }
+/**
+ * Check if friendship exists
+ * @async
+ * @param {Number} offeror 
+ * @param {Number} offeree 
+ * @returns {String} 
+ * @memberof Models/Friends
+ * @inner
+ */
 var checkIfFriendExists = async (offeror, offeree) => {
     var result = await db.promise().query('SELECT * FROM friends WHERE (offeror=? and offeree=?) OR (offeror=? AND offeree=?)',[offeror,offeree,offeree,offeror])
     if(result[0].length > 0) {
@@ -39,9 +85,23 @@ var checkIfFriendExists = async (offeror, offeree) => {
         return "success";
     }
 }
+/**
+ * Set friendship as accepted
+ * @param {Number} offeree 
+ * @param {Number} offeror  
+ * @memberof Models/Friends
+ * @inner
+ */
 var acceptFriend = (offeree, offeror) => {
     db.promise().query('UPDATE friends SET accepted=1 WHERE offeror=? AND offeree =?',[offeror,offeree])
 }
+/**
+ * Set friendship as declined
+ * @param {Number} offeree 
+ * @param {Number} offeror  
+ * @memberof Models/Friends
+ * @inner
+ */
 var declineFriend = (offeree, offeror) => {
     db.promise().query('DELETE FROM friends WHERE offeror=? AND offeree=?',[offeror,offeree])
 }

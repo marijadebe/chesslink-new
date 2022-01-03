@@ -1,8 +1,16 @@
+/**
+ * @namespace Controllers/Auth
+ */
 const crypto = require('crypto')
 const nodemailer = require('nodemailer')
 const validator = require('email-validator')
 const authModel = require('../models/authModel')
-
+/**
+ * Setup mail service
+ * @type {Object}
+ * @memberof Controllers/Auth
+ * @inner
+ */
 var transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
@@ -10,7 +18,15 @@ var transporter = nodemailer.createTransport({
       pass: process.env.MAIL_PASS
     }
 });
-
+/**
+ * Sign-up implementation
+ * @async
+ * @param {Object} req - Request
+ * @param {Object} res - Response
+ * @returns {String}
+ * @memberof Controllers/Auth
+ * @inner
+ */
 var postRegister = async (req, res) => {
     var username = req.body.username;
     var email = req.body.email;
@@ -20,10 +36,11 @@ var postRegister = async (req, res) => {
         res.status(403).send("Email is invalid");
     }
     var response = await authModel.postRegister(username,email,password,securitynumber);
-    if(response == "success") {// nastav ID !!!! important
+    if(response.type == "success") {// nastav ID !!!! important
         req.session.login = true;
         req.session.username = username;
         req.session.validated = 0;
+        req.session.identity = response.id;
         var mailOptions = {
             from: 'chesslinkservice@gmail.com',
             to: email,
@@ -38,6 +55,15 @@ var postRegister = async (req, res) => {
     }
 }
 
+/**
+ * Sign-in implementation
+ * @async
+ * @param {Object} req - Request
+ * @param {Object} res - Response
+ * @returns {String}
+ * @memberof Controllers/Auth
+ * @inner
+ */
 var postLogin = async (req, res) => {
     var username = req.body.username;
     var password = crypto.createHash('sha256').update(req.body.password).digest('hex');
@@ -52,7 +78,14 @@ var postLogin = async (req, res) => {
         res.status(200).send("success")
     }
 }
-
+/**
+ * Validate user
+ * @param {Object} req 
+ * @param {Object} res 
+ * @returns {String}
+ * @memberof Controllers/Auth
+ * @inner
+ */
 var getLogin = (req, res) => {
     if(req.session.login) {
         res.status(200).send((req.session.validated).toString())
@@ -60,11 +93,25 @@ var getLogin = (req, res) => {
         res.status(401).send("Forbidden")
     }
 }
-
+/**
+ * Destroy session
+ * @param {Object} req 
+ * @param {Object} res 
+ * @memberof Controllers/Auth
+ * @inner
+ */
 var deleteLogin = (req, res) => {
     req.session.destroy();
 }
-
+/**
+ * Verifying user - sets req.session.validated
+ * @async
+ * @param {Object} req 
+ * @param {Object} res
+ * @returns {String} 
+ * @memberof Controllers/Auth
+ * @inner
+ */
 var getVerify = async (req,res) => {
     var securitynumber = req.query.securitynumber;
     var response = await authModel.getVerify(securitynumber, req.session.username);
@@ -75,6 +122,5 @@ var getVerify = async (req,res) => {
         res.status(200).send("success")
     }
 }
-
 
 module.exports = {postRegister, postLogin, getLogin, getVerify, deleteLogin}

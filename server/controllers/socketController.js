@@ -1,3 +1,6 @@
+/**
+ * @namespace Controllers/Socket
+ */
 module.exports = function (io) {
 
 const chessEngine = require('js-chess-engine')
@@ -8,6 +11,12 @@ var messagesModel = require('../models/messagesModel')
 var boardsModel = require('../models/boardsModel')
 const { addRating } = require('../models/usersModel.js')
 
+/**
+ * Array of connected users
+ * @type {Array}
+ * @memberof Controllers/Socket
+ * @inner
+ */
 var clients = []
 io.on("connection", (socket) =>{
   socketModel.postOnline(socket, true);
@@ -16,6 +25,12 @@ io.on("connection", (socket) =>{
     socketModel.postOnline(socket, false);
     clients = clients.filter(client => client.socketid != socket.id)
   })
+  /**
+   * Send friend request.
+   * @param {Number} data - ID of player, whose friendship is requested.
+   * @memberof Controllers/Socket
+   * @inner
+   */
   socket.on("friendreq", async (data) => {
     var result = await friendsModel.checkIfFriendExists(socket.request.session.identity, data)
     if(result == "error") {socket.emit("friendReqError");return;}
@@ -100,6 +115,8 @@ io.on("connection", (socket) =>{
    * Triggered when player makes valid move.
    * @param {String} fen - FEN of the new board position.
    * @param {Number} id - room ID
+   * @memberof Controllers/Socket
+   * @inner
    */
   socket.on("moveRoom", (fen, id) => {
     var chess = new Chess(fen);
@@ -118,6 +135,8 @@ io.on("connection", (socket) =>{
    * @param {String} state.color - Color of the caller. Either "white" or "black".
    * @param {Array} state.format - Array that contains "mic" and/or "cam" depending on which one's player wants to enable on room join.
    * @param {Number} state.player - ID of the player being called.
+   * @memberof Controllers/Socket
+   * @inner
    */
   socket.on("callFriend", async (state)=> {
     let playerWhite; let playerBlack;

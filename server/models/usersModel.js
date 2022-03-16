@@ -45,6 +45,7 @@ var getUser = async (id,username) => {
     arr.online = result[0][0].online;
     arr.joindate = result[0][0].joindate;
     arr.avatar = "http://"+ip.address()+":8000"+result[0][0].avatar;
+    arr.preferences = result[0][0].preferences;
     return arr;
 }
 /**
@@ -90,4 +91,8 @@ var addRating = (id, amount) => {
     db.promise().query('UPDATE users SET rating=rating+? WHERE id=?',[amount,id]);
 }
 
-module.exports = {getUsers,getUser, putAvatar, getLeaderboard, addRating};
+var putPreferences = (id, dark, light, arrow) => {
+    db.promise().query('UPDATE users SET preferences=JSON_SET(preferences,"$.darkColor",?,"$.lightColor",?,"$.arrowColor",?) WHERE id=?',[dark,light,arrow,id]);
+}
+
+module.exports = {getUsers,getUser, putAvatar, getLeaderboard, addRating, putPreferences};

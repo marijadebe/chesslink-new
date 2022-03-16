@@ -14,6 +14,7 @@ import ModeContext from './ModeContext';
 import {ThemeProvider, createTheme, CssBaseline, responsiveFontSizes} from "@mui/material";
 import { SnackbarProvider } from 'notistack';
 import Multiplayer from './multiplayer/Multiplayer';
+import Analysis from './analysis/Analysis';
 
 function RoutesComponent() {
   return(
@@ -23,6 +24,7 @@ function RoutesComponent() {
       <Route className="routegrade" path="/verify" element={<ProtectedRoute requiresValid={false} component={<Verify />} />} />
       <Route className="routegrade" path="/singleplayer" element={<ProtectedRoute requiresValid={true} component={<SinglePlayer />} />} />
       <Route className="routegrade" path="/multiplayer/:id" element={<ProtectedRoute requiresValid={true} component={<Multiplayer />} />} />
+      <Route className="routegrade" path="/analysis" element={<ProtectedRoute requiresValid={true} component={<Analysis />} />} />
       <Route className="routegrade" path="/users/:name" element={<ProtectedRoute requiresValid={true} component={<Account />} />} />
       <Route className="routegrade" path="/messages/:name" element={<ProtectedRoute requiresValid={true} component={<Messages />} />} />
       <Route className="routegrade" path="/" element={<ProtectedRoute requiresValid={true} component={<Main />} />} />

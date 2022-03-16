@@ -9,6 +9,7 @@ import "../css/Messages.css";
 import Navbar from '../main/Navbar';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import MessageChat from './MessageChat';
+import { API_URL } from '../apiHelper';
 axios.defaults.withCredentials = true;
 
 function Messages() {
@@ -31,7 +32,7 @@ function Messages() {
         }
       }));
     useEffect(()=> {
-        axios.get('/api/users/ANY/'+name).then((result)=> {
+        axios.get(`${API_URL}/api/users/ANY/${name}`).then((result)=> {
             setUserData(result.data);
         }).catch((err)=> {
             setError(true);

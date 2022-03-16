@@ -3,12 +3,13 @@ import axios from 'axios';
 import Loading from '../Loading';
 import {Link as RouterLink} from 'react-router-dom';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Link, Typography, Divider } from '@mui/material';
+import { API_URL } from '../apiHelper';
 axios.defaults.withCredentials = true;
 
 function Leaderboard() {
     const [data, setData] = useState([]);
     useEffect(()=> {
-        axios.get('/api/users/leaderboard').then((res)=> {
+        axios.get(`${API_URL}/api/users/leaderboard`).then((res)=> {
             setData(res.data)
         })
     },[])

@@ -1,13 +1,15 @@
 import { ListItem, Avatar, Button, ListItemAvatar } from '@mui/material';
-import React from 'react';
+import React, { useState } from 'react';
 import socket from '../socketInstance';
 
-function DrawerDataPending({data}) {
+function DrawerDataPending({data, reRenderPending}) {
     var accept = (id) => {
         socket.emit('acceptFriendReq', id)
+        reRenderPending(true);
     }
     var decline = (id) => {
         socket.emit('declineFriendReq', id)
+        reRenderPending(false);
     }
     return(
         <ListItem key={data.offeror.id}>

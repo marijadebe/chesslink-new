@@ -4,6 +4,7 @@ import {AreaChart, XAxis, YAxis, CartesianGrid, Area, Tooltip, ResponsiveContain
 import Loading from '../Loading';
 import "../css/Main.css";
 import { useTheme } from '@mui/material/styles';
+import {API_URL} from '../apiHelper';
 axios.defaults.withCredentials = true;
 var chartData = [];
 
@@ -87,7 +88,7 @@ function RatingChart(props) {
     const theme = useTheme();
     const [isLoading, setIsLoading] = useState(true);
     useEffect(()=> {
-        axios.get('/api/users').then((result)=> {
+        axios.get(`${API_URL}/api/users`).then((result)=> {
             chartData = [];
             for(let i = 9; i < 25; i++) {
                 chartData.push({"name":(i+1)*100, "players":0});

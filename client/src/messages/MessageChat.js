@@ -6,6 +6,7 @@ import MessageCounter from "./MessageCounter";
 import SendIcon from '@mui/icons-material/Send';
 import axios from "axios";
 import "../css/Messages.css";
+import { API_URL } from "../apiHelper";
 axios.defaults.withCredentials = true;
 
 
@@ -13,7 +14,7 @@ function MessageChat({PlayerId, nameProp}) {
     const [message, setMessage] = useState("");
     const [data, setData] = useState([]);
     useEffect(()=> {
-        axios.get('/api/messages/'+nameProp).then((result)=> {
+        axios.get(`${API_URL}/api/messages/${nameProp}`).then((result)=> {
             setData(result.data);
         });
     },[])

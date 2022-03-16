@@ -10,6 +10,7 @@ import axios from 'axios';
 import ChesslinkLogo from '../ChesslinkLogo';
 import ModeContext from "../ModeContext.js";
 import InfoDialog from './InfoDialog';
+import { API_URL } from "../apiHelper";
 axios.default.withCredentials = true;
 var passwordsSame = true;
 
@@ -23,7 +24,7 @@ function Register() {
     var {colorMode, setColorMode} = useContext(ModeContext);
     var authRegister = () => {
         if(passwordsSame) {
-        axios.post('http://localhost:8000/auth/reg', {username: username, password: password, email:email}, {
+        axios.post(`${API_URL}/auth/reg`, {username: username, password: password, email:email}, {
             headers: {
               'Content-Type': 'application/json'
             },

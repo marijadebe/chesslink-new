@@ -87,4 +87,13 @@ var getLeaderboard = async (req, res) => {
     }
 }
 
-module.exports = {getUsers, getUser, postUpload, getLeaderboard, getYourself}
+var putPreferences = (req, res) => {
+    try {
+        console.log(req.body);
+        usersModel.putPreferences(req.session.identity,req.body.darkColor, req.body.lightColor, req.body.arrowColor);
+    }catch(err) {
+        res.status(404).send("Error 404");
+    }
+}
+
+module.exports = {getUsers, getUser, postUpload, getLeaderboard, getYourself, putPreferences}

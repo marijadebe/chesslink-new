@@ -11,6 +11,7 @@ import {socket} from "../socketInstance";
 import { sendFriendReq } from '../socketHelper';
 import PushNotification from "../pushnotifications/PushNotification";
 import Navbar from "../main/Navbar";
+import { API_URL } from "../apiHelper";
 axios.defaults.withCredentials = true;
 
 function Account(props) {
@@ -20,7 +21,7 @@ function Account(props) {
     const [data, setData] = useState({});
     let {name} = useParams();
     useEffect(()=> {
-        axios.get('http://localhost:8000/api/users/ANY/'+name).then((result)=> {
+        axios.get(`${API_URL}/api/users/ANY/${name}`).then((result)=> {
             setLoading(false);
             result.data.joindate = new Date(result.data.joindate).getDate()+"."+parseInt(new Date(result.data.joindate).getMonth()+1)+"."+new Date(result.data.joindate).getFullYear();
             setData(result.data);

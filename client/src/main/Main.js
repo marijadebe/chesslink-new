@@ -5,7 +5,6 @@ import RatingChart from './RatingChart';
 import SelectChart from './SelectChart';
 import LobbyDisplay from './LobbyDisplay';
 import axios from 'axios';
-import {reconnectSocket} from "../socketInstance";
 import "../css/Main.css";
 import Navbar from './Navbar';
 import MainDial from "./MainDial";
@@ -36,9 +35,6 @@ function Main() {
                 break;
         }
     }
-    useEffect(()=> {
-        reconnectSocket();
-    },[])
     return(
         <>
         <Box className="mainview" sx={{ flexGrow: 1 }}>
@@ -58,7 +54,7 @@ function Main() {
                     </Item>
                 </Grid>
                 <Grid item xs={12} md={8}>
-                    <Item className="content" className="kidGrid">
+                    <Item className="content kidGrid">
                         <Typography variant="h2">Statistics&nbsp;<SelectChart signalChart={sendChartType}/></Typography>
                         {selectedChart}
                     </Item>

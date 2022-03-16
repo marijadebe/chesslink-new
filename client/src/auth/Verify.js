@@ -3,6 +3,7 @@ import { Box } from "@mui/system";
 import React, { useState } from "react";
 import axios from 'axios';
 import { useNavigate } from "react-router";
+import { API_URL } from "../apiHelper";
 axios.default.withCredentials = true;
 
 function Verify() {
@@ -10,7 +11,7 @@ function Verify() {
     var [secCode, setSecCode] = useState("");
 
     var getVerify = () => {
-        axios.get('http://localhost:8000/auth/reg', {params:{securitynumber:secCode}}).then((response)=> {
+        axios.get(`${API_URL}/auth/reg`, {params:{securitynumber:secCode}}).then((response)=> {
             navigate('/');
         }).catch((err)=> {
             console.log(err);

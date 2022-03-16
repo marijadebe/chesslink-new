@@ -1,7 +1,7 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, FormLabel, List, ToggleButtonGroup, ToggleButton, Select, MenuItem } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import axios from "axios";
-import socket from '../socketInstance';
+import {socket,reconnectSocket} from '../socketInstance';
 import LobbyDisplayModalPlayerData from './LobbyDisplayModalPlayerData';
 import VideocamOffIcon from '@mui/icons-material/VideocamOff';
 import MicOffIcon from '@mui/icons-material/MicOff';
@@ -16,7 +16,10 @@ function LobbyDisplayModalPlayer(props) {
     const [selectedIndex, setSelectedIndex] = useState(0);
     const [color, setColor] = useState("white");
     const [recognitionToken, setRecognitionToken] = useState(0);
-    useEffect(()=>socket.emit("getFriendsData"),[])
+    useEffect(()=> {
+        reconnectSocket();
+        socket.emit("getFriendsData")
+    },[])
     useEffect(()=> {
         socket.on("getFriendsDataCallback",(datas,identifier) => {
           console.log(datas);

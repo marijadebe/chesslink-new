@@ -14,7 +14,7 @@ function PushNotification() {
             enqueueSnackbar("Can't send friend request!",{variant:"error"})
         })
         socket.on("getFriendReq", (data) => {
-            enqueueSnackbar("You have received friend request from "+data.name+".",{variant:"info"})
+            enqueueSnackbar(`You have received friend request from ${data.name}.`,{variant:"info"})
         })
         /**
          * @callback
@@ -28,7 +28,7 @@ function PushNotification() {
         })
         socket.on("callFriendCallback", (id) => {
             enqueueSnackbar("Calling ... ",{variant:"info"})
-            navigate('/multiplayer/'+id);
+            navigate(`/multiplayer/${id}`);
         })
     return () => {
         socket.off("friendReqError");

@@ -4,10 +4,8 @@ import { AccordionDetails, AccordionSummary, List } from '@mui/material';
 import MuiAccordion from '@mui/material/Accordion';
 import { styled } from '@mui/system';
 import socket from '../socketInstance';
-import axios from 'axios';
 import DrawerDataPending from './DrawerDataPending';
 import DrawerDataFriend from './DrawerDataFriend';
-axios.defaults.withCredentials = true;
 
 function DrawerData() {
     const [data, setData] = useState([]);
@@ -37,6 +35,10 @@ function DrawerData() {
         border: 'none'
     }
     }));
+    var reRender = (dataRem, addF) => {
+      setData(data.filter(item => item.offeror.id!==dataRem.offeror.id))
+      if(addF) setDataFriend([...dataFriend,dataRem])
+    }
     return(
         <>
         <Accordion>
@@ -46,7 +48,7 @@ function DrawerData() {
             <AccordionDetails>
               <List dense={true}>
                 {
-                  data.length > 0 ? data.map((datapoint) => <DrawerDataPending key={datapoint.id} data={datapoint}/>) : "You have no pending friends."
+                  data.length > 0 ? data.map((datapoint) => <DrawerDataPending key={datapoint.id} data={datapoint} reRenderPending={(addF)=>reRender(datapoint,addF)}/>) : "You have no pending friends."
                 }
               </List>
             </AccordionDetails>
@@ -58,7 +60,7 @@ function DrawerData() {
             <AccordionDetails>
                 <List dense={true}>
                   {
-                    dataFriend.map((datapoint) => <DrawerDataFriend key={datapoint.id} data={datapoint} token={recognitionToken}/>)
+                   dataFriend.length > 0 ? dataFriend.map((datapoint) => <DrawerDataFriend key={datapoint.id} data={datapoint} token={recognitionToken}/>) : "You have no friends."
                   }
                 </List>
             </AccordionDetails>

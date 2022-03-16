@@ -10,6 +10,7 @@ import ChesslinkLogo from '../ChesslinkLogo.js';
 import "../css/Login.css";
 import ModeContext from "../ModeContext.js";
 import InfoDialog from './InfoDialog';
+import { API_URL } from "../apiHelper.js";
 axios.defaults.withCredentials = true;
 
 function Login() {
@@ -19,7 +20,7 @@ function Login() {
     var [openDialog, setOpenDialog] = useState(false);
     var {colorMode, setColorMode} = useContext(ModeContext);
     var authLogin = () => {
-        axios.post('http://localhost:8000/auth/log', {username:username, password:password}, {
+        axios.post(`${API_URL}/auth/log`, {username:username, password:password}, {
             headers: {
               'Content-Type': 'application/json'
             },

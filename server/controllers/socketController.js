@@ -42,23 +42,39 @@ io.on("connection", (socket) =>{
       }  
     }
   })
-  socket.on("stockfishMove", (fen) => {
-    var chess = new Chess(fen);
-    if(chess.game_over()) { //player checkmate
+  socket.on("stockfishResign", ()=> {
+    addRating(socket.request.session.identity, -5);
+    socket.emit("stockfishMoveLoss");
+  })
+  socket.on("stockfishMove", (pgn, difficulty) => {
+    var chess = new Chess();
+    chess.load_pgn(pgn);
+    if(chess.game_over() && chess.in_checkmate()) { //player checkmate
       socket.emit("stockfishMoveWin");
       addRating(socket.request.session.identity, 5);
       return;
     }
-    let game = new chessEngine.Game(fen)
-    game.aiMove(2)
-    var data = game.exportFEN()
-    chess = new Chess(data);
-    if(chess.game_over()) { //computer checkmate
+    if(chess.game_over() && !chess.in_checkmate()) {
+      socket.emit("stockfishMoveDraw");
+      return;
+    }
+    let diff = ["easy","medium","hard"];
+    let game = new chessEngine.Game(chess.fen())
+    var move = game.aiMove(diff.indexOf(difficulty)+1);
+    var movi = chess.move({from: Object.keys(move)[0].toLowerCase(),to: move[Object.keys(move)[0]].toLowerCase(), promotion: 'q'});
+    console.log(chess.ascii());
+    if(chess.game_over() && chess.in_checkmate()) { //computer checkmate
       socket.emit("stockfishMoveLoss");
       addRating(socket.request.session.identity, -5);
     }
-    socket.emit("stockfishMoveCallback", data)
+    if(chess.game_over() && !chess.in_checkmate()) {
+      socket.emit("stockfishMoveDraw");
+      return;
+    }
+    console.log(chess.pgn())
+    socket.emit("stockfishMoveCallback", chess.pgn())
   })
+
   socket.on("getFriendsData", async ()=> {
     data = await friendsModel.getFriendsSpecific(socket.request.session.identity)
     socket.emit("getFriendsDataCallback",JSON.stringify(data),socket.request.session.identity)
@@ -89,7 +105,6 @@ io.on("connection", (socket) =>{
     socket.request.session.destroy();
     clients = clients.filter(client => client.socketid != socket.id)
   })
-
   
   socket.on("joinRoom", (id) => {
     var roomName = "room"+id;

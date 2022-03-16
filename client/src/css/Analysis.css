@@ -1,0 +1,11 @@
+.sideBar {
+    height: 100%;
+    margin: 5px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+}
+.sideBar li {
+    list-style-type: none;
+}

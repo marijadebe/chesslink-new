@@ -2,20 +2,21 @@ import React, {useState, useEffect} from 'react';
 import {Navigate} from 'react-router-dom';
 import Loading from '../Loading.js';
 import axios from 'axios';
+import { API_URL } from '../apiHelper.js';
 axios.defaults.withCredentials = true;
 var authValid = 0;
 
 function ProtectedRoute(props) {
     var [isLogged, setIsLogged] = useState("Loading");
     useEffect(() => {
-        axios.get('http://localhost:8000/auth/log').then((response)=> {
+        axios.get(`${API_URL}/auth/log`).then((response)=> {
             authValid = parseInt(response.data);
             setIsLogged("True");
         }).catch((err) =>{
             setIsLogged("False");
         })
     }, [])
-    axios.get('http://localhost:8000/auth/log').then((response)=> {
+    axios.get(`${API_URL}/auth/log`).then((response)=> {
             authValid = parseInt(response.data);
             setIsLogged("True");
         }).catch((err) =>{

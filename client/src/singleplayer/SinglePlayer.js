@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Chessboard } from 'react-chessboard';
 import { useLocation } from 'react-router-dom';
 import Chess from 'chess.js';
@@ -13,6 +13,8 @@ import { API_URL } from '../apiHelper';
 axios.defaults.withCredentials = true;
 
 function SinglePlayer() {
+    const newGameAudio = useMemo(()=> new Audio('../res/multi_new.mp3'));
+    const moveAudio = useMemo(()=>new Audio('../res/chess_move.mp3'));
     const [game, setGame] = useState(new Chess());
     const [gameOver, setGameOver] = useState("");
     const [yourMove, setYourMove] = useState(false);
@@ -31,6 +33,7 @@ function SinglePlayer() {
         socket.emit("stockfishResign");
     }
     useEffect(()=> {
+        newGameAudio.play();
         if(state.color === "white") setYourMove(true);
         else {
             socket.emit("stockfishMove", game.pgn(),state.difficulty);
@@ -40,6 +43,7 @@ function SinglePlayer() {
             chessNew.load_pgn(pgn);
             setGame(chessNew);
             setYourMove(true);
+            moveAudio.play();
         })
         socket.on("stockfishMoveWin", () => {
             setGameOver("youwon")
@@ -77,6 +81,7 @@ function SinglePlayer() {
           });
           if (move === null) return false;
           setYourMove(false);
+          moveAudio.play();
           socket.emit("stockfishMove",game.pgn(),state.difficulty);
           return true;  
     }

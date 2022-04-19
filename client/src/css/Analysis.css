@@ -6,6 +6,9 @@
     justify-content: space-between;
     align-items: center;
 }
+.listLi {
+    overflow-y: scroll;
+}
 .sideBar li {
     list-style-type: none;
 }

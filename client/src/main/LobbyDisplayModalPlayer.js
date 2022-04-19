@@ -8,6 +8,7 @@ import MicOffIcon from '@mui/icons-material/MicOff';
 import MicIcon from '@mui/icons-material/Mic';
 import VideocamIcon from '@mui/icons-material/Videocam';
 import Loading from '../Loading';
+import { v4 as uuidv4 } from 'uuid';
 axios.defaults.withCredentials = true;
 
 function LobbyDisplayModalPlayer(props) {
@@ -22,7 +23,6 @@ function LobbyDisplayModalPlayer(props) {
     },[])
     useEffect(()=> {
         socket.on("getFriendsDataCallback",(datas,identifier) => {
-          console.log(datas);
           var dataF = JSON.parse(datas)
           dataF = dataF.filter(item => item.accepted !== 0);
           setData(dataF);
@@ -47,7 +47,7 @@ function LobbyDisplayModalPlayer(props) {
                     {data.length <= 0 && <Loading/>}
                     {data.map((item) => (
                         <>
-                         <LobbyDisplayModalPlayerData key={item.id} keyProp={item.id} datapoint={item} selectedIndex={selectedIndex} listItemClick={(evt,index)=>setSelectedIndex(index)} token={recognitionToken} />
+                         <LobbyDisplayModalPlayerData key={uuidv4()} keyProp={uuidv4()} datapoint={item} selectedIndex={selectedIndex} listItemClick={(evt,index)=>setSelectedIndex(index)} token={recognitionToken} />
                         </>
                     ))}
                 </List>

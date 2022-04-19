@@ -106,12 +106,15 @@ io.on("connection", (socket) =>{
     clients = clients.filter(client => client.socketid != socket.id)
   })
   
-  socket.on("joinRoom", (id) => {
+  socket.on("joinRoom", (id, peerId) => {
     var roomName = "room"+id;
     socket.join(roomName);
     try {
       var room = io.sockets.adapter.rooms.get(roomName);
-      io.sockets.in(roomName).emit('joinRoomCallback', room.size);
+      io.sockets.in(roomName).emit('joinRoomCallback', room.size, peerId);
+      if(room.size >= 2) {
+        socket.broadcast.to(roomName).emit('callSender',peerId);
+      }
     }catch(err) {
 
     }
@@ -125,6 +128,11 @@ io.on("connection", (socket) =>{
     }catch(err) {
 
     } 
+  })
+  socket.on('playerResign', (fen, id) => {
+    var roomName = "room"+id;
+    io.sockets.in(roomName).emit('playerLoss', fen, socket.request.session.identity);
+    addRating(socket.request.session.identity, 5);
   })
   /**
    * Triggered when player makes valid move.
@@ -163,7 +171,7 @@ io.on("connection", (socket) =>{
       playerBlack = socket.request.session.identity;
     }
     var resId = await boardsModel.postBoard('rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1', false, playerWhite, playerBlack);
-    socket.emit("callFriendCallback", resId);
+    socket.emit("callFriendCallback", resId,state.format);
     for(client of clients) {
       if(client.userid == state.player) {
         socket.to(client.socketid).emit("friendCalling", socket.request.session.identity, resId)

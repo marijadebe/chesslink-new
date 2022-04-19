@@ -1,5 +1,5 @@
-import React, { useEffect, useState, useRef } from 'react';
-import { useParams } from 'react-router-dom';
+import React, { useEffect, useState, useRef, useMemo } from 'react';
+import { useParams, useLocation } from 'react-router-dom';
 import Loading from '../Loading';
 import socket from '../socketInstance';
 import "../css/Singleplayer.css";
@@ -11,30 +11,23 @@ import axios from "axios";
 import MultiplayerModal from './MultiplayerModal';
 import PushNotification from '../pushnotifications/PushNotification';
 import { API_URL } from '../apiHelper';
-import Peer from 'simple-peer';
+import Peer from "peerjs";
+import { v4 as uuidv4 } from 'uuid';
 axios.defaults.withCredentials = true;
 
 function Multiplayer() {
+    const newGameAudio = useMemo(()=>new Audio('../res/chess_move.mp3'));
     const [game, setGame] = useState(new Chess());
     const {id} = useParams();
     const [isPlaying, setIsPlaying] = useState(false);
     const [data, setData] = useState({});
     const [gameOver, setGameOver] = useState(-1);
     const [yourMove, setYourMove] = useState(false);
-    const [stream, setStream] = useState(null);
-    const [peer, setPeer] = useState(null);
-    
-    const myVideoFeed = useRef();
-    const userVideoFeed = useRef();
-    const peerRef = useRef();
+    const localStreamRef = useRef(null);
+    const remoteStreamRef = useRef(null);
+    const peerInstance = useRef(null);
+    var state = useLocation().state;
 
-    var safeGameMutate = (modify) => {
-        setGame((g) => {
-            const update = { ...g };
-            modify(update);
-            return update;
-        });
-    }
     var moveMethod = (source, target, piece) => {
         var move = null;
         if(!yourMove) return false;
@@ -47,33 +40,58 @@ function Multiplayer() {
           });
           if (move === null) return false;
           setYourMove(false);
+          newGameAudio.play();
           socket.emit("moveRoom",game.fen(),id);
           return true;
     }
     useEffect(()=> {
-        socket.emit("joinRoom", id)
+        console.log(API_URL.substring(0, API_URL.lastIndexOf(":8000")).replace('http://',''));
+        const peer = new Peer(uuidv4(), {
+            host: "localhost",
+            key: "peerjs",
+            port: "9000",
+            path: "/app"
+        })
+        console.log("Me peerID je "+peer.id);
+        peer.on("call", (call) => {
+            console.log("Dostal jsem volani");
+            console.log(peer);
+            var getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
+            getUserMedia({video:true,audio:true}, (stream) => {
+                localStreamRef.current.srcObject = stream;
+                localStreamRef.current.muted = true;
+                localStreamRef.current.play();
+                call.answer(stream);
+                stream.getVideoTracks()[0].enabled = state.video;
+                stream.getAudioTracks()[0].enabled = state.audio;
+            })
+            call.on('stream', (remoteStream) => {
+                remoteStreamRef.current.srcObject = remoteStream;
+                remoteStreamRef.current.play();  
+            })
+        })
+        peerInstance.current = peer;
+        socket.emit("joinRoom", id, peer.id)
         axios.get(`${API_URL}/api/boards/${id}`).then((res)=> {
             setData(res.data);
             setGame(new Chess(res.data.fen));
-            console.log(res.data.whiteMove+", "+res.data.yourself+", "+res.data.playerWhite);
-            console.log((res.data.whiteMove === 1 && res.data.playerWhite === res.data.yourself) || (res.data.whiteMove === 0 && res.data.playerBlack === res.data.yourself))
             if((res.data.whiteMove === 1 && res.data.playerWhite === res.data.yourself) || (res.data.whiteMove === 0 && res.data.playerBlack === res.data.yourself)) {
                 setYourMove(true);
             }
         }).catch((err)=> {
         })
-        socket.on("joinRoomCallback", (count) => {
-            if(count === 2) {
-                const peer = new Peer({initiator: false, trickle: false, stream});
+        socket.on("joinRoomCallback", (count, peerId) => {
+            if(count == 2) {
                 setIsPlaying(true);
-            }else {
-                const peer = new Peer({initiator: true, trickle: false, stream});
+            }
+            else {
                 setIsPlaying(false);
             }
-            peer.on('stream', (currentStream) => {
-                userVideoFeed.current.srcObject = currentStream;
-            })
-            peerRef.current = peer;
+        })
+        socket.on("callSender",(pid) => {
+            console.log("PeerID: "+pid);
+            console.log("MyID: "+peerInstance.current.id);
+            call(pid);
         })
         socket.on("gameMutate", (fen) => {
             setYourMove(true)
@@ -84,32 +102,55 @@ function Multiplayer() {
             setGame(new Chess(fen))
             setGameOver(id)
         })
+        socket.on("playerLoss", (fen,id) => {
+            setYourMove(false)
+            setGame(new Chess(fen))
+            setGameOver(id)
+        })
         return () => {
             socket.off("joinRoomCallback")
             socket.off("gameMutate")
             socket.off("playerWon")
+            socket.off("playerLoss")
             socket.emit("leaveRoom", id)
-            peerRef.current.destroy();
+            peer.destroy();
         }
-    },[])
-
-    useEffect(()=> {
-        navigator.mediaDevices.getUserMedia({video: true, audio: true}).then(
-            (currentStream)=> {
-                setStream(currentStream);
-                myVideoFeed.current.srcObject = currentStream;
-            }
-        )
-    },[])
-
+    },[]);
+    var safeGameMutate = (modify) => {
+        setGame((g) => {
+            const update = { ...g };
+            modify(update);
+            return update;
+        });
+    }
+    var resignGame = () => {
+        socket.emit("playerResign");
+    }
+    var call = (remotePeerJSId) => {
+        var getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
+        getUserMedia({video: true, audio: true}, (stream)=> {
+            localStreamRef.current.srcObject = stream;
+            localStreamRef.current.muted = true;
+            localStreamRef.current.play();
+            let call = peerInstance.current.call(remotePeerJSId, stream);
+            call.on('stream', (remoteStream) => {
+                remoteStreamRef.current.srcObject = remoteStream;
+                remoteStreamRef.current.play();  
+            })
+            stream.getVideoTracks()[0].enabled = state.video;
+            stream.getAudioTracks()[0].enabled = state.audio;
+        })
+    }
     if(!isPlaying) return(<><Loading />Waiting for opponent...</>);
     if(Object.keys(data).length === 0) return(<><Loading />Fetching from API...</>);
     return(
         <div className="mainView">
-            <Chessboard id="BasicBoard" position={game.fen()} areArrowsAllowed={true} onPieceDrop={moveMethod} boardOrientation={data.yourself===data.playerWhite ? "white" : "black"} />
-            <MultiplayerPanel propData={data} />
+            <div className="chessboard">
+            <Chessboard id="BasicBoard" boardWidth={450} position={game.fen()} areArrowsAllowed={true} onPieceDrop={moveMethod} boardOrientation={data.yourself===data.playerWhite ? "white" : "black"} />
+            </div>
+            <MultiplayerPanel resignation={()=>resignGame()} propData={data} sourceData={localStreamRef} remoteData={remoteStreamRef} />
             {gameOver !== -1 && <MultiplayerModal content={gameOver} />}
-            <MainDial/> 
+            <MainDial/>
             <PushNotification/>
         </div>
     );

@@ -26,9 +26,10 @@ function PushNotification() {
             setOpen(true);
             setDatapoint({"caller":data,"roomid":resid})
         })
-        socket.on("callFriendCallback", (id) => {
+        socket.on("callFriendCallback", (id,format) => {
+            console.log('Formát'+format);
             enqueueSnackbar("Calling ... ",{variant:"info"})
-            navigate(`/multiplayer/${id}`);
+            navigate(`/multiplayer/${id}`,{state:{audio:format.includes('mic') ? true : false,video:format.includes('cam') ? true : false }});
         })
     return () => {
         socket.off("friendReqError");
